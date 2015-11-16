@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui"
+	template="/templates/template.xhtml">
+
+	<ui:define name="body">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{candidatoBean.validarCaptcha}" />
+		</f:metadata>
+
+		<h:form prependId="false">
+			<p:fieldset legend="Cadastro de Candidato">
+				<p:panel header="Dados Pessoal">
+					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+						<h:outputLabel value="Nome Completo:" styleClass="icoObrigatorio" />
+						<p:inputText value="#{candidatoBean.model.nome}" size="50" maxlength="255" id="idNome"
+							requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+						<p:message for="idNome" />
+
+						<h:outputLabel value="Matrícula:" />
+						<p:inputText value="#{candidatoBean.model.matricula}" size="20" maxlength="255" id="idMatricula" />
+						<h:outputText value="" />
+
+						<h:outputLabel value="Data de Nascimento:" styleClass="icoObrigatorio" />
+						<p:calendar maxdate="#{candidatoBean.dataHj}" yearRange="-111:+0" locale="pt" pattern="dd/MM/yyyy"
+							id="dtNascimento" navigator="true" maxlength="10" size="15" readOnlyInputText="true"
+							value="#{candidatoBean.model.dataNascimento}" mode="popup" showOn="button"
+							requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+						<p:message for="dtNascimento" />
+
+						<h:outputLabel value="Nacionalidade:" />
+						<p:selectOneRadio id="options" value="#{candidatoBean.model.nacionalidadeBrasil}">
+							<f:selectItem itemLabel="Brasileiro" itemValue="true" />
+							<f:selectItem itemLabel="Outro (Caso  não possua CPF)" itemValue="false" />
+							<p:ajax event="change" process="options" listener="#{candidatoBean.limparCampo}" update="idDocumento" />
+						</p:selectOneRadio>
+						<h:outputText value="" />
+
+						<h:outputLabel value="Logradouro:" />
+						<p:inputText value="#{candidatoBean.model.logradouro}" size="50" maxlength="255" />
+						<h:outputText value="" />
+
+						<h:outputLabel value="Complemento:" />
+						<p:inputText value="#{candidatoBean.model.complemento}" size="50" maxlength="255" />
+						<h:outputText value="" />
+
+						<h:outputLabel value="UF:" styleClass="icoObrigatorio" />
+						<p:selectOneMenu effect="fade" style="width:280px;" value="#{candidatoBean.idUfEnderecoSelecionado}"
+							id="idUfEndereco" requiredMessage="#{candidatoBean.requiredMessage}" required="true">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{candidatoBean.ufEnderecos}" var="objeto" itemLabel="#{objeto.sigla}"
+								itemValue="#{objeto.id}" />
+							<p:ajax update="idMunicipioEndereco" process="@this" event="change" listener="#{candidatoBean.changeUFEndereco}" />
+						</p:selectOneMenu>
+						<p:message for="idUfEndereco" />
+
+						<h:outputLabel value="Munícipio:" styleClass="icoObrigatorio" />
+						<p:selectOneMenu effect="fade" style="width:280px;" value="#{candidatoBean.idMunicipioEnderecoSelecionado}"
+							id="idMunicipioEndereco" requiredMessage="#{candidatoBean.requiredMessage}" required="true">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{candidatoBean.municipioEnderecos}" var="objeto" itemLabel="#{objeto.descricao}"
+								itemValue="#{objeto.id}" />
+						</p:selectOneMenu>
+						<p:message for="idMunicipioEndereco" />
+
+						<h:outputLabel value="CEP:" />
+						<p:inputMask mask="99.999-999" value="#{candidatoBean.model.cep}" size="20" maxlength="255" />
+						<h:outputText value="" />
+					</h:panelGrid>
+
+					<h:panelGrid id="idDocumento" columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+						<h:outputLabel value="CPF:" styleClass="icoObrigatorio" rendered="#{candidatoBean.model.nacionalidadeBrasil}" />
+						<p:inputMask value="#{candidatoBean.model.cpf}" size="20" maxlength="255"
+							rendered="#{candidatoBean.model.nacionalidadeBrasil}" mask="999.999.999-99" />
+						<h:outputLabel value="Documento Estrangeiro:" styleClass="icoObrigatorio"
+							rendered="#{!candidatoBean.model.nacionalidadeBrasil}" />
+						<p:inputText value="#{candidatoBean.model.docEstrangeiro}" size="20" maxlength="255"
+							rendered="#{!candidatoBean.model.nacionalidadeBrasil}" />
+						<h:outputText value="" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%" >
+						<h:outputLabel value="E-mail Pessoal" />
+						<p:inputText autocomplete="off" value="#{candidatoBean.model.emailPessoal}" id="emailPessoa" size="50"
+							maxlength="255" />
+						<p:message for="emailPessoa" />
+						<h:outputLabel value="Contato em caso de Emergência:" />
+						<p:inputText value="#{candidatoBean.model.nomeEmergencia}" size="50" maxlength="255"/>
+						<h:outputText value="" />
+						<h:outputLabel value="Telefone do Contato:" />
+						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telEmergencia}" size="20" maxlength="255" />
+						<h:outputText value="" />
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2" columnClasses="coluna20,coluna80" width="100%" id="necessidadesEspeciais">
+						<h:outputLabel value="Portador de necessidades especiais?" />
+						<p:selectBooleanCheckbox value="#{candidatoBean.model.necessidadeEspecial}" id="checkNecessidade" >
+							<p:ajax event="change" process="necessidadesEspeciais" update="necessidadesEspeciais" listener="#{candidatoBean.habilitarCamposNecessidade}" />
+						</p:selectBooleanCheckbox>
+						<h:outputLabel value="Descrição da necessidade:" rendered="#{candidatoBean.model.necessidadeEspecial}"/>
+						<p:inputText value="#{candidatoBean.model.descricaoNecessidadeEspecial}" size="50" maxlength="255" rendered="#{candidatoBean.model.necessidadeEspecial}"/>
+					</h:panelGrid>
+				</p:panel>
+				
+				<p:panel header="Dados Institucional">
+					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+						<h:outputLabel value="orgão:" styleClass="icoObrigatorio" />
+						<p:autoComplete queryDelay="500" value="#{candidatoBean.orgaoSelecionado}" minQueryLength="2" id="idOrgaos"
+							size="70" completeMethod="#{candidatoBean.completeOrgao}" forceSelection="true" var="lista"
+							itemLabel="#{lista.nomeSiglaFormat}" itemValue="#{lista.id}" converter="OrgaoConverter" maxResults="15"
+							requiredMessage="#{candidatoBean.requiredMessage}" required="true">
+						</p:autoComplete>
+						<p:message for="idOrgaos" />
+
+						<h:outputLabel value="UF:" styleClass="icoObrigatorio" />
+						<p:selectOneMenu effect="fade" style="width:280px;" value="#{candidatoBean.idUfOrgaoSelecionado}" id="idUf"
+							requiredMessage="#{candidatoBean.requiredMessage}" required="true">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{candidatoBean.ufOrgaos}" var="objeto" itemLabel="#{objeto.sigla}"
+								itemValue="#{objeto.id}" />
+							<p:ajax update="idMunicipio" process="@this" event="change" listener="#{candidatoBean.changeUF}" />
+						</p:selectOneMenu>
+						<p:message for="idUf" />
+
+						<h:outputLabel value="Munícipio:" styleClass="icoObrigatorio" />
+						<p:selectOneMenu effect="fade" style="width:280px;" value="#{candidatoBean.idMunicipioSelecionado}"
+							id="idMunicipio" requiredMessage="#{candidatoBean.requiredMessage}" required="true">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItems value="#{candidatoBean.municipioOrgaos}" var="objeto" itemLabel="#{objeto.descricao}"
+								itemValue="#{objeto.id}" />
+						</p:selectOneMenu>
+						<p:message for="idMunicipio" />
+
+						<h:outputLabel value="E-mail para acesso ao sistema:" styleClass="icoObrigatorio" />
+						<p:inputText autocomplete="off" value="#{candidatoBean.model.emailInstitucional}" size="50" maxlength="255"
+							id="idEmailInstitucional" requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+						<p:message for="idEmailInstitucional" />
+
+						<h:outputLabel value="Confirmação de E-mail:" styleClass="icoObrigatorio" />
+						<p:inputText autocomplete="off" value="#{candidatoBean.confirmacaoEmail}" size="50" maxlength="255"
+							id="idEmailConfirme" requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+						<p:message for="idEmailConfirme" />
+
+						<h:outputLabel value="Matrícula do Chefe:" />
+						<p:inputText value="#{candidatoBean.model.matriculaChefe}" size="20" maxlength="255" id="idMatriculaChefe" />
+						<h:outputText value="" />
+					</h:panelGrid>
+				</p:panel>
+				
+				<p:panel header="Telefone(s)">
+					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+
+						<h:outputLabel value="Telefone Com.:" />
+						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telComercial}" size="20" maxlength="255" />
+						<h:outputText value="" />
+
+						<h:outputLabel value="Telefone Cel.:" />
+						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telCelular}" size="20" maxlength="255" />
+						<h:outputText value="" />
+
+						<h:outputLabel value="Telefone Res.:" />
+						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telResidencial}" size="20" maxlength="255" />
+						<h:outputText value="" />
+
+					</h:panelGrid>
+				</p:panel>
+
+				<div align="center">
+					<p:commandButton value="Salvar" action="#{candidatoBean.save}" ajax="true" process="@form" update="@form" />
+					<p:commandButton value="Limpar" immediate="true" ajax="false" action="primeiroAcesso.jsf" />
+				</div>
+			</p:fieldset>
+
+			<p:dialog appendToBody="true" modal="true" header="Enviando Email" widgetVar="popAviso">
+				<h:outputText
+					value="Cadastro realizado com sucesso. Em poucos instantes será enviado um email com sua senha para acessar o sistema." />
+				<br />
+				<div align="center">
+					<p:commandButton value="Ok" immediate="true" action="#{sair.logout}" />
+				</div>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui" template="/templates/template.xhtml">
+
+	<f:metadata>
+		<f:event type="preRenderView" listener="#{inscricaoCursoBean.carregaMsg}" />
+	</f:metadata>
+
+
+	<ui:define name="body">
+
+		<script type="text/javascript">
+			$ = jQuery;
+
+			$(document).ready(function() {
+				widgePessoal.toggle();
+				widgetInstitucional.toggle();
+				widgetTel.toggle();
+			});
+		</script>
+
+		<h:form prependId="false" id="form">
+			<p:fieldset legend="Área do Candidato" id="fieldPrincipal">
+				<p:tabView id="tabView" activeIndex="#{inscricaoCursoBean.abaId}">
+					<p:ajax event="tabChange" update=":form:fieldPrincipal" listener="#{inscricaoCursoBean.onChange}" />
+
+					<!-- DADOS INICIAIS -->
+					<p:tab id="tabDadosIniciais" title="Dados Iniciais">
+
+						<p:panel header="Dados Pessoal" toggleable="true" toggleSpeed="500" widgetVar="widgePessoal">
+							<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+								<h:outputLabel value="Nome Completo:" styleClass="icoObrigatorio" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.nome}" size="50" maxlength="255" id="idNome"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true" disabled="true" />
+								<p:message for="idNome" />
+
+
+								<h:outputLabel value="Matrícula:" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.matricula}" size="20" maxlength="255" id="idMatricula" />
+								<h:outputText value="" />
+
+								<h:outputLabel value="Nacionalidade:" />
+								<p:selectOneRadio id="options" value="#{inscricaoCursoBean.model.candidato.nacionalidadeBrasil}" disabled="true">
+									<f:selectItem itemLabel="Brasileiro" itemValue="true" />
+									<f:selectItem itemLabel="Outro (Caso  não possua CPF)" itemValue="false" />
+									<p:ajax event="change" process="options" listener="#{inscricaoCursoBean.limparCampo}" update="idDocumento" />
+								</p:selectOneRadio>
+								<h:outputText value="" />
+							</h:panelGrid>
+
+							<h:panelGrid id="idDocumento" columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+								<h:outputLabel value="CPF:" rendered="#{inscricaoCursoBean.model.candidato.nacionalidadeBrasil}" />
+								<p:inputMask value="#{inscricaoCursoBean.model.candidato.cpf}" size="20" maxlength="255"
+									rendered="#{inscricaoCursoBean.model.candidato.nacionalidadeBrasil}" mask="999.999.999-99" disabled="true" />
+								<h:outputLabel value="Documento Estrangeiro:" rendered="#{!inscricaoCursoBean.model.candidato.nacionalidadeBrasil}" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.docEstrangeiro}" size="20" maxlength="255"
+									rendered="#{!inscricaoCursoBean.model.candidato.nacionalidadeBrasil}" disabled="true" />
+								<h:outputText value="" />
+							</h:panelGrid>
+
+							<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+								<h:outputLabel value="E-mail Pessoal" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.emailPessoal}" size="50" maxlength="255" />
+								<h:outputText value="" />
+							</h:panelGrid>
+
+							<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+
+								<h:outputLabel value="Logradouro:" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.logradouro}" size="50" maxlength="255" />
+								<h:outputText value="" />
+
+								<h:outputLabel value="Complemento:" />
+								<p:inputText value="#{inscricaoCursoBean.model.candidato.complemento}" size="50" maxlength="255" />
+								<h:outputText value="" />
+
+								<h:outputLabel value="UF:" styleClass="icoObrigatorio" />
+								<p:selectOneMenu effect="fade" style="width:280px;" value="#{inscricaoCursoBean.idUfEnderecoSelecionado}" id="idUfEndereco"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{inscricaoCursoBean.ufEnderecos}" var="objeto" itemLabel="#{objeto.sigla}" itemValue="#{objeto.id}" />
+									<p:ajax update="idMunicipioEndereco" process="@this" event="change" listener="#{inscricaoCursoBean.changeUFEndereco}" />
+								</p:selectOneMenu>
+								<p:message for="idUfEndereco" />
+
+								<h:outputLabel value="Munícipio:" styleClass="icoObrigatorio" />
+								<p:selectOneMenu effect="fade" style="width:280px;" value="#{inscricaoCursoBean.idMunicipioEnderecoSelecionado}"
+									id="idMunicipioEndereco" requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{inscricaoCursoBean.municipioEnderecos}" var="objeto" itemLabel="#{objeto.descricao}"
+										itemValue="#{objeto.id}" />
+								</p:selectOneMenu>
+								<p:message for="idMunicipioEndereco" />
+
+								<h:outputLabel value="CEP:" />
+								<p:inputMask mask="99.999-999" value="#{inscricaoCursoBean.model.candidato.cep}" size="20" maxlength="255" />
+								<h:outputText value="" />
+							</h:panelGrid>
+
+						</p:panel>
+
+						<p:panel header="Dados Institucional" toggleable="true" toggleSpeed="500" widgetVar="widgetInstitucional">
+							<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%" id="camposCandidato">
+
+								<h:outputLabel value="órgão:" styleClass="icoObrigatorio" />
+								<p:autoComplete queryDelay="500" value="#{inscricaoCursoBean.orgaoSelecionado}" minQueryLength="2" id="idOrgaos" size="70"
+									completeMethod="#{inscricaoCursoBean.completeOrgao}" maxResults="15" forceSelection="true" var="lista"
+									itemLabel="#{lista.nomeSiglaFormat}" itemValue="#{lista.id}" converter="OrgaoConverter"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+								</p:autoComplete>
+								<p:message for="idOrgaos" />
+
+								<h:outputLabel value="UF:" styleClass="icoObrigatorio" />
+								<p:selectOneMenu effect="fade" style="width:280px;" value="#{inscricaoCursoBean.idUfOrgaoSelecionado}" id="idUf"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{inscricaoCursoBean.ufOrgaos}" var="objeto" itemLabel="#{objeto.sigla}" itemValue="#{objeto.id}" />
+									<p:ajax update="idMunicipio" process="@this" event="change" listener="#{inscricaoCursoBean.changeUF}" />
+								</p:selectOneMenu>
+								<p:message for="idUf" />
+
+								<h:outputLabel value="Munícipio(orgão):" styleClass="icoObrigatorio" />
+								<p:selectOneMenu effect="fade" style="width:280px;" value="#{inscricaoCursoBean.idMunicipioSelecionado}" id="idMunicipio"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+									<f:selectItem itemLabel="Selecione" itemValue="" />
+									<f:selectItems value="#{inscricaoCursoBean.municipioOrgaos}" var="objeto" itemLabel="#{objeto.descricao}" itemValue="#{objeto.id}" />
+								</p:selectOneMenu>
+								<p:message for="idMunicipio" />
+
+								<h:outputLabel value="E-mail Institucional:" styleClass="icoObrigatorio" />
+								<h:panelGrid columns="3">
+									<p:inputText value="#{inscricaoCursoBean.model.candidato.emailInstitucional}" size="50" maxlength="255" id="idEmailInstitucional"
+										requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true" disabled="#{!inscricaoCursoBean.alterarEmail}" />
+									<p:selectBooleanCheckbox value="#{inscricaoCursoBean.alterarEmail}">
+										<p:ajax update="camposCandidato" process="@this" event="change" />
+									</p:selectBooleanCheckbox>
+									<h:outputLabel value="Alterar email" />
+								</h:panelGrid>
+								<p:message for="idEmailInstitucional" />
+
+								<h:outputLabel value="Confirmação E-mail Institucional:" styleClass="icoObrigatorio" id="labelConfirmacaoEmail"
+									rendered="#{inscricaoCursoBean.alterarEmail}" />
+								<p:inputText value="#{inscricaoCursoBean.confirmacaoEmail}" size="50" maxlength="255" id="idEmailConfirme"
+									requiredMessage="#{inscricaoCursoBean.requiredMessage}" rendered="#{inscricaoCursoBean.alterarEmail}" />
+								<h:outputText value="" id="complementoConfirmacao" rendered="#{inscricaoCursoBean.alterarEmail}" />
+							</h:panelGrid>
+
+						</p:panel>
+
+						<p:panel header="Telefone(s)" toggleable="true" toggleSpeed="500" widgetVar="widgetTel">
+							<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
+								<h:outputLabel value="Telefone Com.:" />
+								<p:inputMask mask="(99)99999999?9" value="#{inscricaoCursoBean.model.candidato.telComercial}" size="20" maxlength="255" />
+								<h:outputText value="" />
+
+								<h:outputLabel value="Telefone Cel.:" />
+								<p:inputMask mask="(99)99999999?9" value="#{inscricaoCursoBean.model.candidato.telCelular}" size="20" maxlength="255" />
+								<h:outputText value="" />
+
+								<h:outputLabel value="Telefone Res.:" />
+								<p:inputMask mask="(99)99999999?9" value="#{inscricaoCursoBean.model.candidato.telResidencial}" size="20" maxlength="255" />
+								<h:outputText value="" />
+
+							</h:panelGrid>
+						</p:panel>
+
+						<h:panelGrid width="100%" id="gridAreaAtuacao">
+							<p:fieldset legend="Área de Atuação" style="width:98%">
+								<p:dataTable id="idAreaAtuacao" var="lista" value="#{inscricaoCursoBean.areaAtuacaoDataModel}"
+									rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+									selection="#{inscricaoCursoBean.areaAtuacoes}" tyleClass="coluna100" emptyMessage="#{const.empty_message}"
+									paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5">
+									<f:facet name="header">
+										<h:outputLabel value="Não adicionada(s)" />
+									</f:facet>
+									<p:column selectionMode="multiple" style="width:18px" />
+									<p:column headerText="Descrição">
+										<h:outputText value="#{lista.descricao}" />
+									</p:column>
+								</p:dataTable>
+								<br />
+								<h:panelGrid width="100%" style="text-align: center;">
+									<p:commandButton value="Adicionar" action="#{inscricaoCursoBean.adicionarAtuacoes}" update="gridAreaAtuacao" process="@form" />
+								</h:panelGrid>
+								<br />
+								<h:panelGrid style="width:100%" id="panelAtuacoesAdicionados">
+									<p:dataTable var="lista" value="#{inscricaoCursoBean.areaAtuacoesAdicionados}" styleClass="coluna100" id="tableAtuacoesAdicionados"
+										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+										emptyMessage="#{const.empty_message}" paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5">
+										<f:facet name="header">
+											<h:outputLabel value="Adicionada(s)" />
+										</f:facet>
+										<p:column headerText="Descrição">
+											<h:outputText value="#{lista.descricao}" />
+										</p:column>
+										<p:column style="width:10%;text-align:center;">
+											<f:facet name="header">
+												<h:outputLabel value="Ação" />
+											</f:facet>
+											<p:commandLink title="Excluir" process="@this" oncomplete="confirmacao.show()">
+												<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+												<f:setPropertyActionListener target="#{inscricaoCursoBean.areaAtuacaoExclusao}" value="#{lista}" />
+											</p:commandLink>
+										</p:column>
+									</p:dataTable>
+								</h:panelGrid>
+							</p:fieldset>
+							<p:confirmDialog appendToBody="true" message="Confirma a Exclusão" header="Exclusão" severity="alert" widgetVar="confirmacao">
+								<div style="text-align: right;">
+									<p:commandButton value="Sim" update="panelAtuacoesAdicionados,gridAreaAtuacao" oncomplete="confirmacao.hide()"
+										actionListener="#{inscricaoCursoBean.excluirAreaAtuacao}" process="@this" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" onclick="confirmacao.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</div>
+							</p:confirmDialog>
+						</h:panelGrid>
+						<br />
+						<h:panelGrid width="100%" id="gridCargo">
+							<p:fieldset legend="Cargos" style="width:98%">
+								<p:dataTable id="idCargo" var="lista" value="#{inscricaoCursoBean.cargoDataModel}"
+									rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+									selection="#{inscricaoCursoBean.cargos}" styleClass="coluna100" emptyMessage="#{const.empty_message}"
+									paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5">
+									<p:column selectionMode="multiple" style="width:18px" />
+									<f:facet name="header">
+										<h:outputLabel value="Não adicionado(s)" />
+									</f:facet>
+									<p:column headerText="Descrição">
+										<h:outputText value="#{lista.descricao}" />
+									</p:column>
+								</p:dataTable>
+								<br />
+								<h:panelGrid width="100%" style="text-align: center;">
+									<p:commandButton value="Adicionar" action="#{inscricaoCursoBean.adicionarCargos}" update="gridCargo" process="@form" />
+								</h:panelGrid>
+								<br />
+								<h:panelGrid style="width:100%" id="panelCargosAdicionados">
+									<p:dataTable var="lista" value="#{inscricaoCursoBean.cargosAdicionados}" styleClass="coluna100" id="tableCargosAdicionados"
+										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+										emptyMessage="#{const.empty_message}" paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5">
+										<f:facet name="header">
+											<h:outputLabel value="Adicionado(s)" />
+										</f:facet>
+										<p:column headerText="Descrição">
+											<h:outputText value="#{lista.descricao}" />
+										</p:column>
+										<p:column style="width:10%;text-align:center;">
+											<f:facet name="header">
+												<h:outputLabel value="Ação" />
+											</f:facet>
+											<p:commandLink title="Excluir" process="@this" oncomplete="confirmacaoCargo.show()">
+												<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+												<f:setPropertyActionListener target="#{inscricaoCursoBean.cargoExclusao}" value="#{lista}" />
+											</p:commandLink>
+										</p:column>
+									</p:dataTable>
+								</h:panelGrid>
+							</p:fieldset>
+							<p:confirmDialog appendToBody="true" message="Confirma a Exclusão" header="Exclusão" severity="alert" widgetVar="confirmacaoCargo">
+								<div style="text-align: right;">
+									<p:commandButton value="Sim" update="panelCargosAdicionados,gridCargo" oncomplete="confirmacaoCargo.hide()"
+										actionListener="#{inscricaoCursoBean.excluirCargo}" process="@this" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" onclick="confirmacaoCargo.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</div>
+							</p:confirmDialog>
+						</h:panelGrid>
+						<br />
+						<p:toolbar>
+							<p:toolbarGroup>
+								<p:commandButton value="Salvar" action="#{inscricaoCursoBean.saveDadosInicias}" ajax="true" process="@form" update="@form" />
+							</p:toolbarGroup>
+						</p:toolbar>
+					</p:tab>
+
+					<!-- CURSO -->
+					<p:tab id="tabCurso" title="Inscrições Abertas">
+						<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%" id="panelSelecaoCurso">
+							<h:outputLabel value="Curso:" styleClass="icoObrigatorio" />
+							<p:selectOneMenu effect="fade" style="width:400px;" value="#{inscricaoCursoBean.idCursoSelecionado}" id="idCurso"
+								requiredMessage="#{inscricaoCursoBean.requiredMessage}" required="true">
+								<f:selectItem itemLabel="Selecione" itemValue="0" />
+								<f:selectItems value="#{inscricaoCursoBean.cursos}" var="objeto" itemLabel="#{objeto.cursoData}" itemValue="#{objeto.id}" />
+								<p:ajax update="acordions,botoes" process="@this" event="change" listener="#{inscricaoCursoBean.popularDadosCurso}" />
+							</p:selectOneMenu>
+							<p:message for="idCurso" />
+						</h:panelGrid>
+						<p:accordionPanel cache="false" activeIndex="-1" id="acordions">
+							<p:tab title="Informações Curso"
+								rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0}">
+								<h:panelGrid columns="4" border="0" columnClasses="coluna20,coluna30,coluna20,coluna30" width="100%">
+									<h:outputLabel value="Local:" />
+									<h:outputLabel value="#{inscricaoCursoBean.model.curso.localizacao.descricao}" />
+									<h:outputLabel value="Número de Vagas" />
+									<h:outputLabel value="#{inscricaoCursoBean.model.curso.vagas}" />
+									<h:outputLabel value="Inscrições:" />
+									<h:panelGrid columns="5" cellpadding="0" cellspacing="0" border="0">
+										<h:outputLabel value="#{inscricaoCursoBean.model.curso.dtInicioInscricao}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputLabel>
+										<p:spacer width="10" />
+										<h:outputLabel value=" a " rendered="#{inscricaoCursoBean.model.curso.dtTerminoInscricao != null}" />
+										<p:spacer width="10" />
+										<h:outputLabel value="#{inscricaoCursoBean.model.curso.dtTerminoInscricao}"
+											rendered="#{inscricaoCursoBean.model.curso.dtRealizacaoFim != null}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputLabel>
+									</h:panelGrid>
+									<h:outputLabel value="Perído:" />
+									<h:panelGrid columns="5" cellpadding="0" cellspacing="0" border="0">
+										<h:outputLabel value="#{inscricaoCursoBean.model.curso.dtRealizacaoInicio}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputLabel>
+										<p:spacer width="10" />
+										<h:outputLabel value=" a " />
+										<p:spacer width="10" />
+										<h:outputLabel value="#{inscricaoCursoBean.model.curso.dtRealizacaoFim}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputLabel>
+									</h:panelGrid>
+									<h:outputLabel value="Área:" />
+									<h:outputLabel value="#{inscricaoCursoBean.model.curso.area.descricao}" />
+								</h:panelGrid>
+								<br />
+								<p:fieldset legend="Região" id="fieldRegiao" rendered="#{inscricaoCursoBean.model.curso.flgRegiaoAtivo}">
+									<h:panelGrid columns="2" border="0" width="100%" columnClasses="coluna50,coluna50">
+										<h:panelGrid columns="1" border="0" width="100%" id="panelUf">
+											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaUf" update="listaUf"
+												styleClass="coluna100" value="#{inscricaoCursoBean.ufCursos}" paginator="true" rows="5"
+												rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx">
+												<p:column headerText="UF" style="width:20%">
+													<h:outputText value="#{lista.uf.sigla}" />
+												</p:column>
+												<p:column headerText="Estado" style="width:60%">
+													<h:outputText value="#{lista.uf.descricao}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+										<h:panelGrid columns="1" border="0" width="100%" id="panelMunicipio">
+											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaMunicipio"
+												emptyMessage="Nenhum Município Adicionado" update="listaMunicipio" styleClass="coluna100"
+												value="#{inscricaoCursoBean.municipioCursos}" paginator="true" rows="5"
+												rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx">
+												<p:column headerText="Município" style="width:80%">
+													<h:outputText value="#{lista.municipio.descricao}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</h:panelGrid>
+								</p:fieldset>
+
+								<h:panelGrid id="areasConhecimentoPricipal" width="100%" rendered="#{not empty inscricaoCursoBean.areaConhecimentoCursos}">
+									<br />
+									<p:fieldset legend="Áreas de Conhecimento" id="fieldAreaConhecimento">
+										<h:panelGrid columns="1" id="AreasConhecimento" width="100%" columnClasses="coluna100">
+											<h:panelGrid id="panelGridTableAreaConhecimento" width="100%">
+												<p:dataTable var="areaConhecimentoCurso" id="tableAreaConhecimento" emptyMessage="#{inscricaoCursoBean.emptyMessage}"
+													update="tableAreaConhecimento" rowIndexVar="rowIx" styleClass="coluna100" value="#{inscricaoCursoBean.areaConhecimentoCursos}"
+													rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}"
+													rendered="#{not empty inscricaoCursoBean.areaConhecimentoCursos}">
+
+													<p:column headerText="Descrição" style="width:90%">
+														<h:outputLabel value="#{areaConhecimentoCurso.areaConhecimento.descricao}" />
+													</p:column>
+												</p:dataTable>
+											</h:panelGrid>
+										</h:panelGrid>
+									</p:fieldset>
+									<br />
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Outros Cursos/Turmas Correlacionados"
+								rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0}">
+								<h:panelGrid width="100%">
+									<p:dataTable id="idOutrosCursos" var="lista" value="#{inscricaoCursoBean.outrosCursos}"
+										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx" styleClass="coluna80"
+										emptyMessage="#{const.empty_message}" paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5"
+										style="width:100%">
+										<f:facet name="header">
+											<h:outputLabel value="Outros Cursos/Turmas Correlacionados" />
+										</f:facet>
+										<p:column headerText="Título" style="width:30%">
+											<h:outputText value="#{lista.titulo}" />
+										</p:column>
+										<p:column headerText="Localizacao" style="width:30%">
+											<h:outputText value="#{lista.localizacao.descricao}" />
+										</p:column>
+										<p:column headerText="Inicío" style="width:20%">
+											<h:outputLabel value="#{lista.dtRealizacaoInicio}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputLabel>
+										</p:column>
+										<p:column headerText="Fim" style="width:20%">
+											<h:outputLabel value="#{lista.dtRealizacaoFim}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputLabel>
+										</p:column>
+									</p:dataTable>
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Esfera de Governo"
+								rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0}">
+								<h:panelGrid width="100%">
+									<p:dataTable id="idEsferaGoverno" var="lista" value="#{inscricaoCursoBean.esferaGovernoDataModel}"
+										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+										selection="#{inscricaoCursoBean.esferaGovernos}" styleClass="coluna80" emptyMessage="#{const.empty_message}"
+										paginatorAlwaysVisible="false" paginatorPosition="bottom" paginator="true" rows="5" style="width:100%">
+										<f:facet name="header">
+											<h:outputLabel value="Esfera de Governo" />
+										</f:facet>
+										<p:column selectionMode="multiple" style="width:18px" />
+										<p:column headerText="Descrição">
+											<h:outputText value="#{lista.descricao}" />
+										</p:column>
+									</p:dataTable>
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="E-mail do Chefe Imediato" rendered="#{inscricaoCursoBean.mostrarEmailResponsavel}">
+								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+									<h:outputLabel value="E-mail do Chefe Imediato:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.emailResponsavel}" size="60" maxlength="255" />
+									<h:outputLabel value="Confirmação E-mail:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.emailResponsavelConfirmacao}" size="60" maxlength="255" />
+									<h:outputLabel value="Matrícula do Chefe:" />
+									<p:inputText value="#{inscricaoCursoBean.model.candidato.matriculaChefe}" size="20" maxlength="255" id="idMatriculaChefe" />
+									<h:outputText value="" />
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Dados Bancário(s)" rendered="#{inscricaoCursoBean.mostrarDadosBancario}">
+								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+									<h:outputLabel value="Número Banco:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.banco}" size="20" maxlength="10" />
+									<h:outputLabel value="Agência:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.agencia}" size="20" maxlength="10" />
+									<h:outputLabel value="Conta Corrente:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.contaCorrente}" size="20" maxlength="15" />
+
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Nível Ensino" rendered="#{inscricaoCursoBean.mostrarNivelEnsino}">
+								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+									<h:outputLabel value="Nome da Instituição:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.nomeInstituicao}" size="50" maxlength="255" />
+									<h:outputLabel value="Curso de Formação:" styleClass="icoObrigatorio" />
+									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.nomeCurso}" size="50" maxlength="255" />
+									<h:outputLabel value="Nível Escolaridade:" styleClass="icoObrigatorio" />
+									<p:selectOneRadio value="#{inscricaoCursoBean.candidatoComplemento.codEducacional}">
+										<f:selectItem itemLabel="Ensino Fundamental" itemValue="EF" />
+										<f:selectItem itemLabel="Ensino Médio" itemValue="EM" />
+										<f:selectItem itemLabel="Ensino Superior" itemValue="ES" />
+										<f:selectItem itemLabel="Mestrador" itemValue="ME" />
+										<f:selectItem itemLabel="Doutorado" itemValue="DO" />
+										<f:selectItem itemLabel="Pós Doutorado" itemValue="PD" />
+									</p:selectOneRadio>
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Experiência Profissional " rendered="#{inscricaoCursoBean.mostrarExperienciaProfissional}">
+								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+									<h:outputLabel value="Experiência Anterior:" styleClass="icoObrigatorio" />
+									<p:inputTextarea autoResize="false" cols="70" rows="8"
+										value="#{inscricaoCursoBean.candidatoComplemento.experienciaProfissionalAnterior}" />
+									<h:outputLabel value="Experiência Atual:" styleClass="icoObrigatorio" />
+									<p:inputTextarea autoResize="false" cols="70" rows="8"
+										value="#{inscricaoCursoBean.candidatoComplemento.experienciaProfissionalAtual}" />
+								</h:panelGrid>
+							</p:tab>
+
+							<p:tab title="Montar Grade de Oficinas"
+								rendered="#{inscricaoCursoBean.cursoSelecionado.flgPossuiOficina and inscricaoCursoBean.idCursoSelecionado != 0}">
+								<h:panelGrid id="panelGridSelecoes" width="100%" columns="2" columnClasses="coluna12,coluna50">
+									<h:outputLabel value="Horário:" styleClass="icoObrigatorio" />
+									<p:selectOneMenu id="horario" style="width:400px;" value="#{inscricaoCursoBean.idHorario}">
+										<f:selectItem itemLabel="Selecione" itemValue="0" />
+										<f:selectItems value="#{inscricaoCursoBean.horarios}" var="horario" itemLabel="#{horario.descHorarioCompleto}"
+											itemValue="#{horario.id}" />
+										<p:ajax update="oficina" process="@this" event="change" listener="#{inscricaoCursoBean.carregarOficinasGradeOficina}" />
+									</p:selectOneMenu>
+									<h:outputLabel value="Oficina:" styleClass="icoObrigatorio" />
+									<p:selectOneMenu id="oficina" style="width:400px;" value="#{inscricaoCursoBean.idGradeOficina}">
+										<f:selectItem itemLabel="Selecione" itemValue="0" />
+										<f:selectItems value="#{inscricaoCursoBean.gradeOficinas}" var="gradeOficina"
+											itemLabel="#{gradeOficina.oficina.nomOficina} - Turma: #{gradeOficina.turma.descricao}" itemValue="#{gradeOficina.id}" />
+									</p:selectOneMenu>
+								</h:panelGrid>
+								<p:spacer height="30px;" />
+								<center>
+									<p:commandButton value="Adicionar Oficina" process="@this,panelGridSelecoes,totalCargaHoraria" update="panelGridSelecoes,listaOficinas,totalCargaHoraria"
+										actionListener="#{inscricaoCursoBean.adicionarOficina}" />
+								</center>
+								<p:spacer height="30px;" />
+								<h:panelGrid width="100%" id="panelOficinas">
+									<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="listaOficina" id="listaOficinas"
+										emptyMessage="Nenhuma oficina adicionada" update="listaOficinas" styleClass="coluna100"
+										rowsPerPageTemplate="#{inscricaoCursoBean.paginacao}" value="#{inscricaoCursoBean.listaGradeOficinas}"
+										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" paginator="true" rows="5" rowIndexVar="rowIx">
+										<f:facet name="header">
+											<h:outputLabel value="Grade de Oficinas" />
+										</f:facet>
+										<p:column headerText="Oficina">
+											<h:outputText value="#{listaOficina.oficina.nomOficina}" />
+										</p:column>
+										<p:column headerText="Sala">
+											<h:outputText value="#{listaOficina.sala.nomSala}" />
+										</p:column>
+										<p:column headerText="Turma">
+											<h:outputText value="#{listaOficina.turma.descricao}" />
+										</p:column>
+										<p:column headerText="Horário">
+											<h:outputText value="#{listaOficina.horario.descHorarioCompleto}" />
+										</p:column>
+										<p:column headerText="Ação" style="width:10%;text-align:center;">
+											<p:commandLink title="Excluir Oficinas" update=":form:tabView:acordions:panelOficinas,:form:tabView:acordions:panelGridSelecoes"
+												process="@this" actionListener="#{inscricaoCursoBean.deleteOficina(listaOficina)}">
+												<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+											</p:commandLink>
+										</p:column>
+									</p:dataTable>
+									<h:panelGrid id="totalCargaHoraria" style="text-align: right;" width="100%">
+										<h:outputText value="Total da carga horária: #{inscricaoCursoBean.totalCargaHoraria}" style="font-weight: bold;color: #3E5612;"/>
+									</h:panelGrid>
+								</h:panelGrid>
+								<p:confirmDialog appendToBody="true" width="400"
+									message="A oficina possui carga horária superior a 4 horas, desta forma, os turnos correspondentes serão preenchidos automaticamente. Deseja continuar?"
+									header="Confirmação" severity="alert" widgetVar="confirmarSelecaoOficina" id="confirmarSelecaoOficina">
+									<div style="text-align: right">
+										<p:commandButton value="Sim" update=":form:tabView:acordions:panelOficinas,:form:tabView:acordions:panelGridSelecoes"
+											oncomplete="confirmarSelecaoOficina.hide()" action="#{inscricaoCursoBean.confirmarSelecaoOficina}"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Não" onclick="confirmarSelecaoOficina.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</div>
+								</p:confirmDialog>
+								<p:confirmDialog appendToBody="true" width="400"
+									message="A oficina possui carga horária superior a 4 horas, desta forma, os turnos correspondentes serão excluídos automaticamente. Deseja continuar?"
+									header="Confirmação" severity="alert" widgetVar="confirmarExclusaoOficina" id="confirmarExclusaoOficina">
+									<div style="text-align: right">
+										<p:commandButton value="Sim" update=":form:tabView:acordions:panelOficinas,:form:tabView:acordions:panelGridSelecoes"
+											oncomplete="confirmarExclusaoOficina.hide()" action="#{inscricaoCursoBean.confirmarExclusaoGradeOficina}"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Não" onclick="confirmarExclusaoOficina.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</div>
+								</p:confirmDialog>
+							</p:tab>
+
+							<p:tab title="Documentação Exigida pelo Curso" rendered="#{inscricaoCursoBean.cursoSelecionado.flgExigeDocumentacao}">
+								<h:panelGrid columns="1" id="panelPopAnexoDocumentacao" width="100%">
+									<p:fileUpload multiple="true" mode="advanced" auto="true" fileUploadListener="#{inscricaoCursoBean.anexarArquivoDocumentacao}"
+										width="100%" label="Anexar..." cancelLabel="Cancelar" uploadLabel="Enviar" sizeLimit="#{const.tamArquivoByte}"
+										invalidSizeMessage="Tamanho limite excedido" update=":form:tabView:acordions:panelAnexosDocumentacao"
+										allowTypes="/(\.|\/)(jpeg|jpg|png|doc|docx|pdf|JPEG|JPG|PNG|DOC|DOCX|PDF)$/" invalidFileMessage="Tipo de arquivo inválido." />
+									<br />
+									<br />
+								</h:panelGrid>
+								<br />
+								<h:panelGrid columns="1" id="panelAnexosDocumentacao" width="100%">
+									<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaAnexoDocumentacao"
+										emptyMessage="#{inscricaoCursoBean.emptyMessage}" update="listaAnexoDocumentacao" styleClass="coluna100"
+										value="#{inscricaoCursoBean.documentos}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}"
+										paginator="true" rows="5" rowIndexVar="rowIx">
+										<p:column headerText="Nome" style="width:70%">
+											<h:commandLink value="#{lista.nomArquivo}">
+												<p:fileDownload value="#{lista.content}" />
+											</h:commandLink>
+										</p:column>
+										<p:column headerText="Data" style="width:20%">
+											<h:outputLabel value="#{lista.dtCadastro}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputLabel>
+										</p:column>
+										<p:column headerText="Ação" style="width:10%;text-align:center;">
+											<p:commandLink rendered="#{lista.id == null}" title="Excluir" update=":form:tabView:acordions:panelAnexosDocumentacao"
+												process="@this" action="#{inscricaoCursoBean.deleteDocumento}">
+												<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+												<f:setPropertyActionListener target="#{inscricaoCursoBean.documentoExcluir}" value="#{lista}" />
+											</p:commandLink>
+										</p:column>
+									</p:dataTable>
+								</h:panelGrid>
+							</p:tab>
+						</p:accordionPanel>
+						<br />
+						<h:panelGrid id="botoes" width="100%">
+							<p:toolbar rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0}">
+								<p:toolbarGroup>
+									<p:commandButton value="Inscrever-se" onclick="popInscricao.show();" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+						<p:confirmDialog appendToBody="true" message="Confirma a Inscrição" header="Confirmação" severity="alert" widgetVar="popInscricao">
+							<div style="text-align: right;">
+								<p:commandButton value="Sim" action="#{inscricaoCursoBean.saveCurso}" ajax="true" process="tabCurso"
+									oncomplete="popInscricao.hide()" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+								<p:commandButton value="Não" onclick="popInscricao.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							</div>
+						</p:confirmDialog>
+					</p:tab>
+
+					<!-- INSCRIÇÕES REALIZADAS -->
+					<p:tab id="tabInscricaoRealizadas" title="Inscrições Realizadas">
+						<h:panelGrid id="panelInscricoes" width="100%">
+							<p:dataTable var="lista" value="#{inscricaoCursoBean.lazyDataModel}" emptyMessage="#{const.empty_message}"
+								rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
+								rowsPerPageTemplate="#{inscricaoCursoBean.paginacao}" styleClass="coluna100" paginatorAlwaysVisible="false"
+								paginatorPosition="bottom" paginator="true" rows="5">
+								<f:facet name="header">
+									<h:outputLabel value="Inscrições" />
+								</f:facet>
+								<p:column headerText="Curso" style="width:40%">
+									<h:outputText value="#{lista.curso.cursoData}" />
+								</p:column>
+								<p:column headerText="Inscrição Realizada Em" style="width:20%">
+									<h:outputLabel value="#{lista.dtCadastro}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputLabel>
+								</p:column>
+								<p:column headerText="Status" style="width:20%">
+									<h:outputText value="#{lista.statusUltimo.descricao}" />
+								</p:column>
+								<p:column headerText="Selecionar" style="width:10%;text-align:center;">
+									<p:commandLink title="Selecionar" process="@this" update=":form:tabView:panelAcordions,:form:tabView:botaoAbaInscricao"
+										action="#{inscricaoCursoBean.selecionarInscricao}">
+										<h:graphicImage library="design/imagem" title="Selecionar" name="icone-selecionar.png" />
+										<f:setPropertyActionListener target="#{inscricaoCursoBean.inscricaoCursoSelecionado}" value="#{lista}" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable>
+							<br />
+							<h:panelGrid width="100%" id="panelAcordions">
+								<p:accordionPanel activeIndex="-1" cache="false" id="acordionsAbaInscricao"
+									rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.id != null and inscricaoCursoBean.inscricaoCursoSelecionado.id != 0}">
+									<p:tab title="Informações Curso">
+										<h:panelGrid columns="4" border="0" columnClasses="coluna20,coluna30,coluna20,coluna30" width="100%">
+											<h:outputLabel value="Local:" />
+											<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.localizacao.descricao}" />
+											<h:outputLabel value="Número de Vagas" />
+											<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.vagas}" />
+											<h:outputLabel value="Inscrições:" />
+											<h:panelGrid columns="5" cellpadding="0" cellspacing="0" border="0">
+												<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtInicioInscricao}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputLabel>
+												<p:spacer width="10" />
+												<h:outputLabel value=" à " rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtRealizacaoFim != null}" />
+												<p:spacer width="10" />
+												<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtRealizacaoFim}"
+													rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtRealizacaoFim != null}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputLabel>
+											</h:panelGrid>
+											<h:outputLabel value="Período:" />
+											<h:panelGrid columns="5" cellpadding="0" cellspacing="0" border="0">
+												<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtRealizacaoInicio}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputLabel>
+												<p:spacer width="10" />
+												<h:outputLabel value=" à " />
+												<p:spacer width="10" />
+												<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.dtRealizacaoFim}">
+													<f:convertDateTime pattern="dd/MM/yyyy" />
+												</h:outputLabel>
+											</h:panelGrid>
+											<h:outputLabel value="Área:" />
+											<h:outputLabel value="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.area.descricao}" />
+										</h:panelGrid>
+										<br />
+										<p:fieldset legend="Região" id="fieldRegiao" rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgRegiaoAtivo}">
+											<h:panelGrid columns="2" border="0" width="100%" columnClasses="coluna50,coluna50">
+												<h:panelGrid columns="1" border="0" width="100%" id="panelUf">
+													<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaUf" update="listaUf"
+														styleClass="coluna100" value="#{inscricaoCursoBean.ufCursos}" paginator="true" rows="5"
+														rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx">
+														<p:column headerText="UF" style="width:20%">
+															<h:outputText value="#{lista.uf.sigla}" />
+														</p:column>
+														<p:column headerText="Estado" style="width:60%">
+															<h:outputText value="#{lista.uf.descricao}" />
+														</p:column>
+													</p:dataTable>
+												</h:panelGrid>
+												<h:panelGrid columns="1" border="0" width="100%" id="panelMunicipio">
+													<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaMunicipio"
+														emptyMessage="Nenhum Minicípio Adicionado" update="listaMunicipio" styleClass="coluna100"
+														value="#{inscricaoCursoBean.municipioCursos}" paginator="true" rows="5"
+														rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx">
+														<p:column headerText="Município" style="width:80%">
+															<h:outputText value="#{lista.municipio.descricao}" />
+														</p:column>
+													</p:dataTable>
+												</h:panelGrid>
+											</h:panelGrid>
+										</p:fieldset>
+										<h:panelGrid id="areasConhecimentoPricipal" width="100%" rendered="#{not empty inscricaoCursoBean.areaConhecimentoCursos}">
+											<br />
+											<p:fieldset legend="Áreas de Conhecimento" id="fieldAreaConhecimento">
+												<h:panelGrid columns="1" id="AreasConhecimento" width="100%" columnClasses="coluna100">
+													<h:panelGrid id="panelGridTableAreaConhecimento" width="100%">
+														<p:dataTable var="areaConhecimentoCurso" id="tableAreaConhecimento" emptyMessage="#{inscricaoCursoBean.emptyMessage}"
+															update="tableAreaConhecimento" rowIndexVar="rowIx" styleClass="coluna100"
+															value="#{inscricaoCursoBean.areaConhecimentoCursos}"
+															rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}"
+															rendered="#{not empty inscricaoCursoBean.areaConhecimentoCursos}">
+
+															<p:column headerText="Descrição" style="width:90%">
+																<h:outputLabel value="#{areaConhecimentoCurso.areaConhecimento.descricao}" />
+															</p:column>
+														</p:dataTable>
+													</h:panelGrid>
+												</h:panelGrid>
+											</p:fieldset>
+											<br />
+										</h:panelGrid>
+									</p:tab>
+									<p:tab title="Esfera de Governo">
+										<h:panelGrid width="100%">
+											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaEsferaGoverno"
+												emptyMessage="Nenhuma Esfera de Governo Adicionado" update="listaEsferaGoverno" styleClass="coluna100"
+												value="#{inscricaoCursoBean.esferasGoverno}" paginator="true" rows="5"
+												rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx">
+												<f:facet name="header">
+													<h:outputLabel value="Esfera de Governo" />
+												</f:facet>
+												<p:column headerText="Descrição" style="width:80%">
+													<h:outputText value="#{lista.descricao}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</p:tab>
+
+									<p:tab title="Comprovante(s) e/ou Documentação exigida"
+										rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgExigeDocumentacao or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}">
+										<p:fieldset legend="Comprovante(s) de Pagamento"
+											rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}">
+											<h:panelGrid columns="1" id="panelPopAnexo" width="100%">
+												<p:fileUpload multiple="true" mode="advanced" auto="true" fileUploadListener="#{inscricaoCursoBean.anexarArquivo}" width="100%"
+													label="Anexar..." cancelLabel="Cancelar" uploadLabel="Enviar" sizeLimit="#{const.tamArquivoByte}"
+													invalidSizeMessage="Tamanho limite excedido"
+													update=":form:tabView:acordionsAbaInscricao:panelAnexosComprovante,:form:tabView:botaoAbaInscricao"
+													allowTypes="/(\.|\/)(jpeg|jpg|png|doc|docx|pdf|JPEG|JPG|PNG|DOC|DOCX|PDF)$/" invalidFileMessage="Tipo de arquivo inválido." />
+												<br />
+												<br />
+											</h:panelGrid>
+											<br />
+											<h:panelGrid columns="1" id="panelAnexosComprovante" width="100%">
+												<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaAnexo"
+													emptyMessage="#{inscricaoCursoBean.emptyMessage}" update="listaAnexo" styleClass="coluna100"
+													value="#{inscricaoCursoBean.comprovantes}" rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}"
+													paginator="true" rows="10" rowIndexVar="rowIx">
+													<p:column headerText="Nome" style="width:70%">
+														<h:commandLink value="#{lista.nomArquivo}">
+															<p:fileDownload value="#{lista.content}" />
+														</h:commandLink>
+													</p:column>
+													<p:column headerText="Data" style="width:20%">
+														<h:outputLabel value="#{lista.dtCadastro}">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputLabel>
+													</p:column>
+													<p:column headerText="Ação" style="width:10%;text-align:center;">
+														<p:commandLink rendered="#{lista.id == null}" title="Excluir"
+															update=":form:tabView:acordionsAbaInscricao:panelAnexosComprovante,:form:tabView:botaoAbaInscricao" process="@this"
+															action="#{inscricaoCursoBean.deleteComprovante}">
+															<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+															<f:setPropertyActionListener target="#{inscricaoCursoBean.comprovanteExcluir}" value="#{lista}" />
+														</p:commandLink>
+													</p:column>
+												</p:dataTable>
+											</h:panelGrid>
+											<br />
+											<p:panel header="Informações do Financeiro do Órgão Pagante" style="width:100%"
+												rendered="#{inscricaoCursoBean.mostrarInformacaoPagamento}">
+												<h:panelGrid
+													rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}"
+													columns="4" border="0" columnClasses="coluna20,coluna30,coluna20,coluna30" width="100%">
+													<h:outputLabel value="órgão:" styleClass="icoObrigatorio" />
+													<p:autoComplete queryDelay="500" value="#{inscricaoCursoBean.inscricaoInfoComplementar.orgao}" minQueryLength="2" size="70"
+														completeMethod="#{inscricaoCursoBean.completeOrgao}" forceSelection="true" var="lista" itemLabel="#{lista.nomeSiglaFormat}"
+														itemValue="#{lista.id}" maxResults="15" converter="OrgaoConverter">
+													</p:autoComplete>
+													<h:outputLabel value="Número Empenho/GRU:" styleClass="icoObrigatorio" />
+													<p:inputText value="#{inscricaoCursoBean.inscricaoInfoComplementar.numeroEmpenho}" size="50" maxlength="255" />
+													<h:outputLabel value="Endereço Financeiro Órgão:" styleClass="icoObrigatorio" />
+													<p:inputText value="#{inscricaoCursoBean.inscricaoInfoComplementar.enderecoOrgaoComplemento}" size="50" maxlength="255" />
+													<h:outputLabel value="CNPJ:" styleClass="icoObrigatorio" />
+													<p:inputMask mask="99.999.999/9999-99" value="#{inscricaoCursoBean.inscricaoInfoComplementar.cnpj}" size="20" />
+													<h:outputLabel value="Contato:" />
+													<p:inputText value="#{inscricaoCursoBean.inscricaoInfoComplementar.contato}" size="20" maxlength="255" />
+													<h:outputLabel value="Telefone Financeiro:" />
+													<p:inputMask mask="(99)99999999?9" value="#{inscricaoCursoBean.inscricaoInfoComplementar.telefoneFinanceiro}" size="20"
+														maxlength="255" />
+												</h:panelGrid>
+												<h:panelGrid
+													rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id ne 1 and inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id ne 14}"
+													columns="4" border="0" columnClasses="coluna20,coluna30,coluna20,coluna30" width="100%">
+													<h:outputLabel value="orgão:" />
+													<p:inputText readonly="true" title="#{inscricaoCursoBean.inscricaoInfoComplementar.orgao.nome}" size="40"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.orgao.nome}" />
+
+													<h:outputLabel value="Número Empenho/GRU:" />
+													<p:inputText readonly="true" title="#{inscricaoCursoBean.inscricaoInfoComplementar.numeroEmpenho}" size="40"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.numeroEmpenho}" />
+
+													<h:outputLabel value="Endereço Financeiro Órgão:" />
+													<p:inputText readonly="true" title="#{inscricaoCursoBean.inscricaoInfoComplementar.enderecoOrgaoComplemento}" size="50"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.enderecoOrgaoComplemento}" />
+
+													<h:outputLabel value="CNPJ:" />
+													<p:inputMask mask="99.999.999/9999-99" title="#{inscricaoCursoBean.inscricaoInfoComplementar.cnpj}" readonly="true"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.cnpj}" />
+
+													<h:outputLabel value="Contato:" />
+													<p:inputText readonly="true" title="#{inscricaoCursoBean.inscricaoInfoComplementar.contato}"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.contato}" />
+
+													<h:outputLabel value="Telefone Financeiro:" />
+													<p:inputMask mask="(99)99999999?9" readonly="true" title="#{inscricaoCursoBean.inscricaoInfoComplementar.telefoneFinanceiro}"
+														value="#{inscricaoCursoBean.inscricaoInfoComplementar.telefoneFinanceiro}" />
+												</h:panelGrid>
+											</p:panel>
+										</p:fieldset>
+										<br />
+										<p:fieldset legend="Documentação Exigida pelo Curso"
+											rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgExigeDocumentacao and (inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14)}">
+											<h:panelGrid columns="1" id="panelPopAnexoDocumentacaoInscricoesRealizada" width="100%">
+												<p:fileUpload multiple="true" mode="advanced" auto="true" fileUploadListener="#{inscricaoCursoBean.anexarArquivoDocumentacao}"
+													width="100%" label="Anexar..." cancelLabel="Cancelar" uploadLabel="Enviar" sizeLimit="#{const.tamArquivoByte}"
+													invalidSizeMessage="Tamanho limite excedido"
+													update=":form:tabView:acordionsAbaInscricao:panelAnexosDocumentacaoInscricoesRealizada"
+													allowTypes="/(\.|\/)(jpeg|jpg|png|doc|docx|pdf|JPEG|JPG|PNG|DOC|DOCX|PDF)$/" invalidFileMessage="Tipo de arquivo invÃ¡lido." />
+												<br />
+												<br />
+											</h:panelGrid>
+											<br />
+											<h:panelGrid columns="1" id="panelAnexosDocumentacaoInscricoesRealizada" width="100%">
+												<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista"
+													id="listaAnexoDocumentacaoInscricoesRealizada" emptyMessage="#{inscricaoCursoBean.emptyMessage}"
+													update="listaAnexoDocumentacaoInscricoesRealizada" styleClass="coluna100" value="#{inscricaoCursoBean.documentos}"
+													rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" paginator="true" rows="10" rowIndexVar="rowIx">
+													<p:column headerText="Nome" style="width:70%">
+														<h:commandLink value="#{lista.nomArquivo}">
+															<p:fileDownload value="#{lista.content}" />
+														</h:commandLink>
+													</p:column>
+													<p:column headerText="Data" style="width:20%">
+														<h:outputLabel value="#{lista.dtCadastro}">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputLabel>
+													</p:column>
+													<p:column headerText="Ação" style="width:10%;text-align:center;">
+														<p:commandLink rendered="#{lista.id == null}" title="Excluir"
+															update=":form:tabView:acordionsAbaInscricao:panelAnexosDocumentacaoInscricoesRealizada" process="@this"
+															action="#{inscricaoCursoBean.deleteDocumento}">
+															<h:graphicImage library="design/imagem" name="icone-excluir.png" />
+															<f:setPropertyActionListener target="#{inscricaoCursoBean.documentoExcluir}" value="#{lista}" />
+														</p:commandLink>
+													</p:column>
+												</p:dataTable>
+											</h:panelGrid>
+										</p:fieldset>
+									</p:tab>
+
+									<p:tab title="Visualizar Grade de Oficinas" rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgPossuiOficina}">
+										<h:panelGrid width="100%" id="panelOficinasVisualizacao">
+											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="inscricaoGrade" id="listaOficinasVisualizacao"
+												emptyMessage="Nenhuma oficina adicionada" update="listaOficinasVisualizacao" styleClass="coluna100"
+												rowsPerPageTemplate="#{inscricaoCursoBean.paginacao}" value="#{inscricaoCursoBean.listaInscricaoGrade}"
+												rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" paginator="true" rows="5" rowIndexVar="rowIx">
+												<f:facet name="header">
+													<h:outputLabel value="Grade de Oficinas" />
+												</f:facet>
+												<p:column headerText="Oficina">
+													<h:outputText value="#{inscricaoGrade.gradeOficina.oficina.nomOficina}" />
+												</p:column>
+												<p:column headerText="Sala">
+													<h:outputText value="#{inscricaoGrade.gradeOficina.sala.nomSala}" />
+												</p:column>
+												<p:column headerText="Turma">
+													<h:outputText value="#{inscricaoGrade.gradeOficina.turma.descricao}" />
+												</p:column>
+												<p:column headerText="Horário">
+													<h:outputText value="#{inscricaoGrade.gradeOficina.horario.descHorarioCompleto}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</p:tab>
+								</p:accordionPanel>
+
+								<br />
+
+								<p:toolbar id="botaoAbaInscricao">
+									<p:toolbarGroup>
+										<p:commandButton value="Confirmar Presença" process="@this" oncomplete="confirmationPresenca.show()"
+											rendered="#{inscricaoCursoBean.mostrarBotaoConfirmar}" />
+										<p:commandButton value="Confirmar Envio Comprovante(s) e/ou Documentação" process="@this" oncomplete="confirmationAnexo.show()"
+											rendered="#{(!empty inscricaoCursoBean.comprovantes or !empty inscricaoCursoBean.documentos) and inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}" />
+										<p:commandButton value="Cancelar Inscrição" process="@this" oncomplete="confirmationCancelar.show()" update="botaoAbaInscricao"
+											rendered="#{inscricaoCursoBean.mostrarBotaoCancelar}" />
+									</p:toolbarGroup>
+								</p:toolbar>
+							</h:panelGrid>
+
+							<p:confirmDialog appendToBody="true" message="Confirma o cancelamento" header="Cancelamento" severity="alert"
+								widgetVar="confirmationCancelar">
+								<div style="text-align: right;">
+									<p:commandButton value="Sim" update="panelInscricoes" oncomplete="confirmationCancelar.hide()"
+										actionListener="#{inscricaoCursoBean.cancelarInscricao}" immediate="true" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" onclick="confirmationCancelar.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</div>
+							</p:confirmDialog>
+							<p:confirmDialog appendToBody="true" message="Confirma a presença?" header="Confirmação" severity="alert"
+								widgetVar="confirmationPresenca">
+								<div style="text-align: right;">
+									<p:commandButton value="Sim" update="panelInscricoes" oncomplete="
+										confirmationPresenca.hide()"
+										actionListener="#{inscricaoCursoBean.confirmarPresenca}" immediate="true" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" onclick="confirmationPresenca.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</div>
+							</p:confirmDialog>
+							<p:confirmDialog appendToBody="true" message="Confirma o envio do comprovante e/ou documento?" header="Confirmação" severity="alert"
+								widgetVar="confirmationAnexo">
+								<div style="text-align: right;">
+									<p:commandButton value="Sim" update="@form" oncomplete="
+										confirmationAnexo.hide()"
+										action="#{inscricaoCursoBean.confirmarComprovante}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="Não" onclick="confirmationAnexo.hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</div>
+							</p:confirmDialog>
+						</h:panelGrid>
+					</p:tab>
+					
+					<!-- Executor de Scrips (Somente para executar scripts em produção no SERPRO)-->
+					<p:tab title="Executor de Scripts" rendered="#{login.model.emailInstitucional eq 'gustavoarr@gmail.com' or login.model.emailInstitucional eq 'andreazojs@gmail.com'}">
+						<p:fieldset legend="Executor de Scripts" id="fieldPrincipal">
+							<h:panelGrid id="gridSenha" columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+								<h:outputLabel value="Senha: " styleClass="icoObrigatorio" />
+								<h:panelGrid columns="2" border="0">
+									<p:password value="#{executorScriptBean.senha}" />
+									<p:commandLink process="@this,gridSenha" title="Avançar" update="campos,botoesExecutor" actionListener="#{executorScriptBean.mostrarCampoScript}">
+										<h:graphicImage name="icone-avancar.png" library="design/imagem" />
+									</p:commandLink>
+								</h:panelGrid>
+							</h:panelGrid>
+							<h:panelGrid id="campos" columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+								<h:outputLabel value="Script: " styleClass="icoObrigatorio" rendered="#{executorScriptBean.mostrarScript}" />
+								<p:inputTextarea value="#{executorScriptBean.script}" rows="10" style="width: 100%;" rendered="#{executorScriptBean.mostrarScript}" />
+							</h:panelGrid>
+							<br />
+							<h:panelGroup id="botoesExecutor">
+								<div align="center" >
+									<p:commandButton value="Executar" ajax="true" process="@this,gridSenha,campos" update="griResultado" action="#{executorScriptBean.executar}"
+										rendered="#{executorScriptBean.mostrarScript}" />
+								</div>
+							</h:panelGroup>
+							<br />
+							<br />
+							<h:panelGrid id="griResultado" columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
+								<h:outputLabel value="Resultado: " rendered="#{executorScriptBean.resultado != null}" />
+								<p:inputTextarea value="#{executorScriptBean.resultado}" rows="10" style="width: 100%;"
+									rendered="#{executorScriptBean.resultado != null}" />
+							</h:panelGrid>
+						</p:fieldset>
+					</p:tab>
+				</p:tabView>
+			</p:fieldset>
+		</h:form>
+	</ui:define>
+</ui:composition>
