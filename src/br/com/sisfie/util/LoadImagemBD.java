@@ -10,13 +10,14 @@ import java.net.URLDecoder;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import br.com.arquitetura.excecao.ExcecaoUtil;
@@ -24,7 +25,8 @@ import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
 import br.com.sisfie.service.ImagemService;
 
-@Controller("LoadImagemBD")
+@Component
+@WebServlet("/loadImagemBD")
 public class LoadImagemBD extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -120,7 +122,7 @@ public class LoadImagemBD extends HttpServlet {
 			imageFileName = imageFileName.replaceAll("\\.+(\\\\|/)", "");
 
 			// Decode the file name and prepare file object.
-			imageFileName = URLDecoder.decode(imageFileName, "UTF-16");
+			imageFileName = URLDecoder.decode(imageFileName, "UTF-8");
 
 			// Get content type by filename.
 
