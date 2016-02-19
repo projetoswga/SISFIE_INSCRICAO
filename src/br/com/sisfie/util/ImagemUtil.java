@@ -20,6 +20,7 @@ public class ImagemUtil {
 		passa = passa.replaceAll("[ôõòóö]", "o");
 		passa = passa.replaceAll("[ÛÙÚÜ]", "U");
 		passa = passa.replaceAll("[ûúùü]", "u");
+		passa = passa.replaceAll("à", "a");
 		passa = passa.replaceAll("[Ç]", "C");
 		passa = passa.replaceAll("[ç]", "c");
 		passa = passa.replaceAll("[ýÿ]", "y");
