@@ -154,6 +154,8 @@ public class InscricaoCursoServiceImpl implements InscricaoCursoService {
 		// salva Inscricao Curso
 		dao.save(model);
 		
+		model = (InscricaoCurso) dao.get(InscricaoCurso.class, model.getId());
+		
 		// salva o ultimo status na inscrição do candidato. Neste momento só exite uma.
 		List<StatusInscricao> listaStatusInscricao = new ArrayList<StatusInscricao>();
 		listaStatusInscricao.addAll(model.getStatusInscricoes());
