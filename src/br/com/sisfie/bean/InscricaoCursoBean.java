@@ -1,5 +1,9 @@
 package br.com.sisfie.bean;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1128,6 +1132,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			} else {
 				comprovante.setUrlImagem(Constantes.PATH_IMG_LINUX + fileName);
 			}
+			
+			// Força a criação do arquivo no file system
+			FileOutputStream fos = new FileOutputStream(new File(comprovante.getUrlImagem()));
+			fos.write(event.getFile().getContents());
+			fos.close();
 
 			comprovantes.add(comprovante);
 
@@ -1155,7 +1164,12 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			} else {
 				documento.setUrlImagem(Constantes.PATH_IMG_LINUX + fileName);
 			}
-
+			
+			// Força a criação do arquivo no file system
+			FileOutputStream fos = new FileOutputStream(new File(documento.getUrlImagem()));
+			fos.write(event.getFile().getContents());
+			fos.close();
+			
 			documentos.add(documento);
 
 			FacesMessagesUtil.addInfoMessage(" ", "Arquivo " + event.getFile().getFileName() + " adicionado com sucesso!");
