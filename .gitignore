@@ -1,3 +1,5 @@
-/bin/
-/build/
-/bin/
+/bin/*
+/build/*
+.settings/*
+.classpath
+.tern-project
