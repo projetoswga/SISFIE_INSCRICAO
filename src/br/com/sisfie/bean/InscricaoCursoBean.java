@@ -213,6 +213,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	private Integer totalCargaHoraria = 0;
 	private boolean isParceiro = false;
 	private boolean mostrarBotaoCancelar;
+	private boolean emailValido;
 
 	public InscricaoCursoBean() {
 		inscricaoInfoComplementar = new InscricaoInfoComplementar();
@@ -544,8 +545,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					List<Curso> cursosPesq = cursoService.listarCursosDisponiveis();
 
 					for (Curso item : cursosPesq) {
-						if (item.getPrivado()) {
-							if (!temAcessoCursoPrivado(item)) {
+						/**
+						 * Caso o curso seja privado ou o candidato é instrutor
+						 */
+						if (item.getPrivado() || !item.getEmailsCursoPrivado().isEmpty()) {
+							if (!emailValido(item)) {
 								continue;
 							}
 						}
@@ -657,15 +661,15 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		}
 	}
 
-	public boolean temAcessoCursoPrivado(Curso curso) throws Exception {
-		boolean temAcesso = false;
+	public boolean emailValido(Curso curso) throws Exception {
+		emailValido = false;
 		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
 			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {
-				temAcesso = true;
+				emailValido = true;
 				break;
 			}
 		}
-		return temAcesso;
+		return emailValido;
 	}
 
 	public void onChange(TabChangeEvent event) {
@@ -1352,7 +1356,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	@SuppressWarnings("unchecked")
 	public String saveCurso() {
 		try {
-
+			
 			if (cursoSelecionado.getFlgExigeDocumentacao()) {
 				if (documentos == null || documentos.isEmpty()) {
 					FacesMessagesUtil.addErrorMessage("Documentação ",
@@ -1404,6 +1408,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 			getModel().setCurso(new Curso(idCursoSelecionado));
 			getModel().setFlgParceiro(isParceiro);
+			getModel().setFlgInstrutor(emailValido);
 
 			if (getModel().getId() == null) {
 				getModel().setDtCadastro(new Date());
@@ -2538,5 +2543,13 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	public void setMostrarBotaoCancelar(boolean mostrarBotaoCancelar) {
 		this.mostrarBotaoCancelar = mostrarBotaoCancelar;
+	}
+
+	public boolean isEmailValido() {
+		return emailValido;
+	}
+
+	public void setEmailValido(boolean emailValido) {
+		this.emailValido = emailValido;
 	}
 }

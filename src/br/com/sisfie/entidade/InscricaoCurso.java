@@ -68,6 +68,9 @@ public class InscricaoCurso extends Entidade<Integer> {
 	@Column(name = "flg_parceiro")
 	private Boolean flgParceiro;
 	
+	@Column(name = "flg_instrutor")
+	private Boolean flgInstrutor;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_ultimo_status_inscricao", nullable = true)
 	private StatusInscricao ultimoStatus;
@@ -241,5 +244,13 @@ public class InscricaoCurso extends Entidade<Integer> {
 
 	public void setFlgParceiro(Boolean flgParceiro) {
 		this.flgParceiro = flgParceiro;
+	}
+
+	public Boolean getFlgInstrutor() {
+		return flgInstrutor;
+	}
+
+	public void setFlgInstrutor(Boolean flgInstrutor) {
+		this.flgInstrutor = flgInstrutor;
 	}
 }
