@@ -165,6 +165,7 @@ public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
 	@Override
 	public Integer countInscritosCancelados(Integer idCurso) {
 		Criteria c = getSession().createCriteria(InscricaoCurso.class);
+		c.add(Restrictions.eq("flgInstrutor", false));
 		c.createAlias("curso", "c");
 		c.add(Restrictions.eq("c.id", idCurso));
 		c.createAlias("statusInscricoes", "st");

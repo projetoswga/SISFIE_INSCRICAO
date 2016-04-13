@@ -74,46 +74,11 @@ public class InscricaoCursoDAOImpl extends HibernateDaoSupport implements Inscri
 		query.append(" inner join curso c on ic.id_curso = c.id_curso ");
 		query.append(" inner join status_d s on si.id_status = s.id_status ");
 		query.append(" where c.id_curso = " + idCurso);
+		query.append(" and ic.flg_instrutor = 'false' ");
 		query.append(" and s.id_status not in( " + idsStatus.toString() + " ) ");
 		query.append(" and si.id_status_inscricao in (select max(sti.id_status_inscricao) from status_inscricao sti where sti.id_inscricao_curso = ic.id_inscricao_curso) ");
 		
 		return ((BigInteger) getSession().createSQLQuery(query.toString()).uniqueResult()).intValue();
-		
-//		List<Integer> idsStatus = new ArrayList<Integer>();
-//		idsStatus.add(Status.CANCELADO);
-//		idsStatus.add(Status.AGUARDANDO_VAGA_PRIORIDADE);
-//		idsStatus.add(Status.AGUARDANDO_VAGA);
-//
-//		Criteria c = getSession().createCriteria(InscricaoCurso.class);
-//		c.createAlias("curso", "c");
-//		c.add(Restrictions.eq("c.id", idCurso));
-//		c.createAlias("statusInscricoes", "st");
-//		c.createAlias("st.status", "status");
-//		c.add(Restrictions.not(Restrictions.in("status.id", idsStatus)));
-//		c.setProjection(Projections.distinct(Projections.property("id")));
-//		List<Integer> ids = c.list();
-//
-//		if (ids != null && !ids.isEmpty()) {
-//			Criteria c2 = getSession().createCriteria(InscricaoCurso.class);
-//			c2.add(Restrictions.in("id", ids));
-//			List<InscricaoCurso> lista = c2.list();
-//			Set<Integer> qtd = new HashSet<Integer>();
-//
-//			if (lista != null && !lista.isEmpty()) {
-//				for (InscricaoCurso obj : lista) {
-//					obj.setStatusUltimo(ultimoStatusInscricao(obj).getStatus());
-//					if (!obj.getStatusUltimo().getId().equals(Status.CANCELADO)
-//							&& !obj.getStatusUltimo().getId().equals(Status.AGUARDANDO_VAGA)
-//							&& !obj.getStatusUltimo().getId().equals(Status.AGUARDANDO_VAGA_PRIORIDADE)) {
-//						qtd.add(obj.getId());
-//					}
-//				}
-//				return qtd.size();
-//			}
-//		}
-//
-//		return 0;
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -133,6 +98,7 @@ public class InscricaoCursoDAOImpl extends HibernateDaoSupport implements Inscri
 		}
 		Criteria criteria = getSession().createCriteria(InscricaoCurso.class);
 		criteria.add(Restrictions.eq("candidato.id", model.getCandidato().getId()));
+		criteria.add(Restrictions.eq("flgInstrutor", false));
 		return criteria;
 	}
 
