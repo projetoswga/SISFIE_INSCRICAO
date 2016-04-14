@@ -112,8 +112,10 @@ public class Curso extends Entidade<Integer> {
 	@Column(name = "flg_exige_documentacao")
 	private Boolean flgExigeDocumentacao;
 	
+	@Min(0)
+	@Max(100)
 	@Column(name = "porcentagem")
-	private Double porcentagem;
+	private Integer porcentagem;
 	
 	@Min(0)
 	@Max(100)
@@ -151,6 +153,9 @@ public class Curso extends Entidade<Integer> {
 
 	@OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
 	private Set<AreaConhecimentoCurso> areaConhecimentoCursos = new HashSet<AreaConhecimentoCurso>(0);
+	
+	@OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
+	private Set<OrgaoCurso> orgaoCursos = new HashSet<OrgaoCurso>(0);
 
 	@OneToMany(mappedBy = "curso", fetch = FetchType.LAZY)
 	private Set<EmailCursoPrivado> emailsCursoPrivado = new HashSet<EmailCursoPrivado>(0);
@@ -512,12 +517,19 @@ public class Curso extends Entidade<Integer> {
 		this.numPercentualVagasParceiro = numPercentualVagasParceiro;
 	}
 
-	public Double getPorcentagem() {
+	public Integer getPorcentagem() {
 		return porcentagem;
 	}
 
-	public void setPorcentagem(Double porcentagem) {
+	public void setPorcentagem(Integer porcentagem) {
 		this.porcentagem = porcentagem;
 	}
 
+	public Set<OrgaoCurso> getOrgaoCursos() {
+		return orgaoCursos;
+	}
+
+	public void setOrgaoCursos(Set<OrgaoCurso> orgaoCursos) {
+		this.orgaoCursos = orgaoCursos;
+	}
 }
