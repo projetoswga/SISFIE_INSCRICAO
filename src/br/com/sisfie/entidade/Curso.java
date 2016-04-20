@@ -112,6 +112,12 @@ public class Curso extends Entidade<Integer> {
 	@Column(name = "flg_exige_documentacao")
 	private Boolean flgExigeDocumentacao;
 	
+	@Column(name = "nom_arquivo_frequencia")
+	private String nomeArquivoFrequencia;
+	
+	@Column(name = "url_arquivo_frequencia")
+	private String urlArquivoFrequencia;
+	
 	@Min(0)
 	@Max(100)
 	@Column(name = "porcentagem")
@@ -531,5 +537,21 @@ public class Curso extends Entidade<Integer> {
 
 	public void setOrgaoCursos(Set<OrgaoCurso> orgaoCursos) {
 		this.orgaoCursos = orgaoCursos;
+	}
+
+	public String getNomeArquivoFrequencia() {
+		return nomeArquivoFrequencia;
+	}
+
+	public void setNomeArquivoFrequencia(String nomeArquivoFrequencia) {
+		this.nomeArquivoFrequencia = nomeArquivoFrequencia;
+	}
+
+	public String getUrlArquivoFrequencia() {
+		return urlArquivoFrequencia;
+	}
+
+	public void setUrlArquivoFrequencia(String urlArquivoFrequencia) {
+		this.urlArquivoFrequencia = urlArquivoFrequencia;
 	}
 }

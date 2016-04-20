@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.sisfie.DAO.ImagemDAO;
+import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
 import br.com.sisfie.service.ImagemService;
@@ -27,5 +28,10 @@ public class ImagemServiceImpl implements ImagemService {
 	@Override
 	public InscricaoDocumento carregarDocumentoId(Integer idDocumento) {
 		return imagemDAO.carregarDocumentoId(idDocumento);
+	}
+
+	@Override
+	public Curso carregarCursoId(Integer idCurso) {
+		return imagemDAO.carregarCursoId(idCurso);
 	}
 }

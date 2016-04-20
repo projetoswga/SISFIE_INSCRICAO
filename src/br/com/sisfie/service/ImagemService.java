@@ -1,5 +1,6 @@
 package br.com.sisfie.service;
 
+import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
 
@@ -9,4 +10,6 @@ public interface ImagemService {
 
 	InscricaoDocumento carregarDocumentoId(Integer idDocumento);
 
+	Curso carregarCursoId(Integer idCurso);
+	
 }

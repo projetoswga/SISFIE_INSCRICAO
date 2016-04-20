@@ -8,6 +8,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import br.com.sisfie.DAO.ImagemDAO;
+import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
 
@@ -33,4 +34,10 @@ public class ImagemDAOImpl extends HibernateDaoSupport implements ImagemDAO {
 		return (InscricaoDocumento) c.uniqueResult();
 	}
 
+	@Override
+	public Curso carregarCursoId(Integer idCurso) {
+		Criteria c = getSession().createCriteria(Curso.class);
+		c.add(Restrictions.eq("id", idCurso));
+		return (Curso) c.uniqueResult();
+	}
 }

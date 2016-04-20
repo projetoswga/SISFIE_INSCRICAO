@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import br.com.arquitetura.excecao.ExcecaoUtil;
+import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
 import br.com.sisfie.service.ImagemService;
@@ -37,6 +38,7 @@ public class LoadImagemBD extends HttpServlet {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 	private static final String DOCUMENTO = "documento";
 	private static final String COMPROVANTE = "comprovante";
+	private static final String FREQUENCIA = "frequencia";
 
 	public void init(ServletConfig config) throws ServletException {
 		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
@@ -58,10 +60,36 @@ public class LoadImagemBD extends HttpServlet {
 					processRequestDocumento(request, response);
 				} else if (tipo.equals(COMPROVANTE)) {
 					processRequestComprovante(request, response);
+				} else if (tipo.equals(FREQUENCIA)) {
+					processRequestFrequencia(request, response);
 				}
 			} else {
 				throw new Exception("Parâmetro não encontrado");
 			}
+		} catch (Exception e) {
+			ExcecaoUtil.tratarExcecao(e);
+		}
+	}
+
+	private void processRequestFrequencia(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			Curso curso = null;
+			String idDownload = (String) request.getParameter("idImagemDownload");
+			if (idDownload != null && !idDownload.isEmpty()) {
+				ValidacaoUtil.somenteNumero(idDownload);
+				curso = imagemService.carregarCursoId(new Integer(idDownload));
+			} else {
+				String paramId = request.getParameter("id");
+				ValidacaoUtil.somenteNumero(paramId);
+				if (paramId == null || paramId.isEmpty()) {
+					throw new Exception("Parâmetro não encontrado");
+				}
+				curso = imagemService.carregarCursoId(new Integer(paramId));
+			}
+			if (curso == null || curso.getUrlArquivoFrequencia() == null) {
+				throw new Exception("Parâmetro não encontrado");
+			}
+			enviarImagem(request, response, curso.getUrlArquivoFrequencia(), curso.getNomeArquivoFrequencia());
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
