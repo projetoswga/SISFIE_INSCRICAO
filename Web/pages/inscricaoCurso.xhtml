@@ -606,13 +606,16 @@
 								<p:column headerText="Curso" style="width:40%">
 									<h:outputText value="#{lista.curso.cursoData}" />
 								</p:column>
-								<p:column headerText="Inscrição Realizada Em" style="width:20%">
+								<p:column headerText="Inscrição Realizada Em" style="width:15%">
 									<h:outputLabel value="#{lista.dtCadastro}">
 										<f:convertDateTime pattern="dd/MM/yyyy" />
 									</h:outputLabel>
 								</p:column>
 								<p:column headerText="Status" style="width:20%">
 									<h:outputText value="#{lista.statusUltimo.descricao}" />
+								</p:column>
+								<p:column headerText="Tipo Inscrição" style="width:15%">
+									<h:outputText value="#{lista.tipoInscricao}" />
 								</p:column>
 								<p:column headerText="Selecionar" style="width:10%;text-align:center;">
 									<p:commandLink title="Selecionar" process="@this" update=":form:tabView:panelAcordions,:form:tabView:botaoAbaInscricao"

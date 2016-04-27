@@ -69,7 +69,7 @@ public class InscricaoCurso extends Entidade<Integer> {
 	private Boolean flgParceiro;
 	
 	@Column(name = "flg_instrutor")
-	private boolean flgInstrutor;
+	private Boolean flgInstrutor;
 	
 	@Column(name = "tp_status")
 	private String status;
@@ -99,6 +99,9 @@ public class InscricaoCurso extends Entidade<Integer> {
 
 	@Transient
 	private Status statusUltimo;
+	
+	@Transient
+	private String tipoInscricao;
 
 	public InscricaoCurso() {
 	}
@@ -249,11 +252,11 @@ public class InscricaoCurso extends Entidade<Integer> {
 		this.flgParceiro = flgParceiro;
 	}
 
-	public boolean getFlgInstrutor() {
+	public Boolean getFlgInstrutor() {
 		return flgInstrutor;
 	}
 
-	public void setFlgInstrutor(boolean flgInstrutor) {
+	public void setFlgInstrutor(Boolean flgInstrutor) {
 		this.flgInstrutor = flgInstrutor;
 	}
 
@@ -263,5 +266,13 @@ public class InscricaoCurso extends Entidade<Integer> {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getTipoInscricao() {
+		return tipoInscricao;
+	}
+
+	public void setTipoInscricao(String tipoInscricao) {
+		this.tipoInscricao = tipoInscricao;
 	}
 }

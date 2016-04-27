@@ -98,7 +98,7 @@ public class InscricaoCursoDAOImpl extends HibernateDaoSupport implements Inscri
 		}
 		Criteria criteria = getSession().createCriteria(InscricaoCurso.class);
 		criteria.add(Restrictions.eq("candidato.id", model.getCandidato().getId()));
-		criteria.add(Restrictions.eq("flgInstrutor", false));
+		//criteria.add(Restrictions.eq("flgInstrutor", false));
 		return criteria;
 	}
 

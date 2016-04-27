@@ -92,6 +92,8 @@ import br.com.sisfie.util.TipoEmail;
 public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	private static final long serialVersionUID = 1L;
+	private static final String PARTICIPANTE = "Participante";
+	private static final String INSTRUTOR = "Instrutor";
 
 	@ManagedProperty(value = "#{inscricaoCursoService}")
 	protected InscricaoCursoService inscricaoCursoService;
@@ -1037,7 +1039,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		}
 
 		// Faz as combinações para ver qual a situação e status do curso
-		if (isParceiro) {
+		if (isParceiro || isInstrutor) {
 			status = new Status(Status.PRESENCA_CONFIRMADA);
 			situacao = new Situacao(Situacao.INSCRITO);
 		} else {
@@ -1345,6 +1347,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						for (InscricaoCurso inscricao : inscricoes) {
 							StatusInscricao statusInscricao = inscricaoCursoService.ultimoStatusInscricao(inscricao);
 							inscricao.setStatusUltimo(statusInscricao.getStatus());
+							if (inscricao.getFlgInstrutor()){
+								inscricao.setTipoInscricao(INSTRUTOR);
+							} else {
+								inscricao.setTipoInscricao(PARTICIPANTE);
+							}
 						}
 						return inscricoes;
 					} catch (Exception e) {
