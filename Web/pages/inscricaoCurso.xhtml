@@ -398,7 +398,7 @@
 								</h:panelGrid>
 							</p:tab>
 							<p:tab title="Esfera de Governo"
-								rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0}">
+								rendered="#{inscricaoCursoBean.idCursoSelecionado != null and inscricaoCursoBean.idCursoSelecionado != 0 and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid width="100%">
 									<p:dataTable id="idEsferaGoverno" var="lista" value="#{inscricaoCursoBean.esferaGovernoDataModel}"
 										rowStyleClass="#{empty rowIx or rowIx mod 2 ne 0 ? 'linhaImpar' : 'linhaPar'}" rowIndexVar="rowIx"
@@ -414,7 +414,7 @@
 									</p:dataTable>
 								</h:panelGrid>
 							</p:tab>
-							<p:tab title="E-mail do Chefe Imediato" rendered="#{inscricaoCursoBean.mostrarEmailResponsavel}">
+							<p:tab title="E-mail do Chefe Imediato" rendered="#{inscricaoCursoBean.mostrarEmailResponsavel and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
 									<h:outputLabel value="E-mail do Chefe Imediato:" styleClass="icoObrigatorio" />
 									<p:inputText value="#{inscricaoCursoBean.emailResponsavel}" size="60" maxlength="255" />
@@ -425,7 +425,7 @@
 									<h:outputText value="" />
 								</h:panelGrid>
 							</p:tab>
-							<p:tab title="Dados Bancário(s)" rendered="#{inscricaoCursoBean.mostrarDadosBancario}">
+							<p:tab title="Dados Bancário(s)" rendered="#{inscricaoCursoBean.mostrarDadosBancario and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
 									<h:outputLabel value="Número Banco:" styleClass="icoObrigatorio" />
 									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.banco}" size="20" maxlength="10" />
@@ -436,7 +436,7 @@
 
 								</h:panelGrid>
 							</p:tab>
-							<p:tab title="Nível Ensino" rendered="#{inscricaoCursoBean.mostrarNivelEnsino}">
+							<p:tab title="Nível Ensino" rendered="#{inscricaoCursoBean.mostrarNivelEnsino and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
 									<h:outputLabel value="Nome da Instituição:" styleClass="icoObrigatorio" />
 									<p:inputText value="#{inscricaoCursoBean.candidatoComplemento.nomeInstituicao}" size="50" maxlength="255" />
@@ -453,7 +453,7 @@
 									</p:selectOneRadio>
 								</h:panelGrid>
 							</p:tab>
-							<p:tab title="Experiência Profissional " rendered="#{inscricaoCursoBean.mostrarExperienciaProfissional}">
+							<p:tab title="Experiência Profissional " rendered="#{inscricaoCursoBean.mostrarExperienciaProfissional and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid columns="2" border="0" columnClasses="coluna20,coluna80" width="100%">
 									<h:outputLabel value="Experiência Anterior:" styleClass="icoObrigatorio" />
 									<p:inputTextarea autoResize="false" cols="70" rows="8"
@@ -465,7 +465,7 @@
 							</p:tab>
 
 							<p:tab title="Montar Grade de Oficinas"
-								rendered="#{inscricaoCursoBean.cursoSelecionado.flgPossuiOficina and inscricaoCursoBean.idCursoSelecionado != 0}">
+								rendered="#{inscricaoCursoBean.cursoSelecionado.flgPossuiOficina and inscricaoCursoBean.idCursoSelecionado != 0 and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid id="panelGridSelecoes" width="100%" columns="2" columnClasses="coluna12,coluna50">
 									<h:outputLabel value="Horário:" styleClass="icoObrigatorio" />
 									<p:selectOneMenu id="horario" style="width:400px;" value="#{inscricaoCursoBean.idHorario}">
@@ -540,7 +540,7 @@
 								</p:confirmDialog>
 							</p:tab>
 
-							<p:tab title="Documentação Exigida pelo Curso" rendered="#{inscricaoCursoBean.cursoSelecionado.flgExigeDocumentacao}">
+							<p:tab title="Documentação Exigida pelo Curso" rendered="#{inscricaoCursoBean.cursoSelecionado.flgExigeDocumentacao and !inscricaoCursoBean.instrutor}">
 								<h:panelGrid columns="1" id="panelPopAnexoDocumentacao" width="100%">
 									<p:fileUpload multiple="true" mode="advanced" auto="true" fileUploadListener="#{inscricaoCursoBean.anexarArquivoDocumentacao}"
 										width="100%" label="Anexar..." cancelLabel="Cancelar" uploadLabel="Enviar" sizeLimit="#{const.tamArquivoByte}"
@@ -711,7 +711,7 @@
 											<br />
 										</h:panelGrid>
 									</p:tab>
-									<p:tab title="Esfera de Governo">
+									<p:tab title="Esfera de Governo" rendered="#{!inscricaoCursoBean.inscricaoCursoSelecionado.flgInstrutor}">
 										<h:panelGrid width="100%">
 											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="lista" id="listaEsferaGoverno"
 												emptyMessage="Nenhuma Esfera de Governo Adicionado" update="listaEsferaGoverno" styleClass="coluna100"
@@ -728,7 +728,7 @@
 									</p:tab>
 
 									<p:tab title="Comprovante(s) e/ou Documentação exigida"
-										rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgExigeDocumentacao or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}">
+										rendered="#{(inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgExigeDocumentacao or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14) and !inscricaoCursoBean.inscricaoCursoSelecionado.flgInstrutor}">
 										<p:fieldset legend="Comprovante(s) de Pagamento"
 											rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 1 or inscricaoCursoBean.inscricaoCursoSelecionado.statusUltimo.id eq 14}">
 											<h:panelGrid columns="1" id="panelPopAnexo" width="100%">
@@ -859,7 +859,7 @@
 										</p:fieldset>
 									</p:tab>
 
-									<p:tab title="Visualizar Grade de Oficinas" rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgPossuiOficina}">
+									<p:tab title="Visualizar Grade de Oficinas" rendered="#{inscricaoCursoBean.inscricaoCursoSelecionado.curso.flgPossuiOficina and !inscricaoCursoBean.inscricaoCursoSelecionado.flgInstrutor}">
 										<h:panelGrid width="100%" id="panelOficinasVisualizacao">
 											<p:dataTable paginatorAlwaysVisible="false" paginatorPosition="bottom" var="inscricaoGrade" id="listaOficinasVisualizacao"
 												emptyMessage="Nenhuma oficina adicionada" update="listaOficinasVisualizacao" styleClass="coluna100"

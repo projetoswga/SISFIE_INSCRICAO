@@ -184,6 +184,9 @@ public class Curso extends Entidade<Integer> {
 
 	@Transient
 	private String cursoData;
+	
+	@Transient
+	private boolean isInstrutor;
 
 	public Curso() {
 	}
@@ -553,5 +556,13 @@ public class Curso extends Entidade<Integer> {
 
 	public void setUrlArquivoFrequencia(String urlArquivoFrequencia) {
 		this.urlArquivoFrequencia = urlArquivoFrequencia;
+	}
+
+	public boolean isInstrutor() {
+		return isInstrutor;
+	}
+
+	public void setInstrutor(boolean isInstrutor) {
+		this.isInstrutor = isInstrutor;
 	}
 }

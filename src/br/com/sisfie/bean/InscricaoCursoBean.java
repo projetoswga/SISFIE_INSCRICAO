@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -185,7 +187,6 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	private boolean mostrarExperienciaProfissional;
 	private boolean mostrarEmailResponsavel;
 	private boolean mostrarBotaoConfirmar;
-	private boolean isInstrutor;
 	private CandidatoComplemento candidatoComplemento;
 	private String emailResponsavel;
 	private String emailResponsavelConfirmacao;
@@ -216,6 +217,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	private Integer totalCargaHoraria = 0;
 	private boolean isParceiro = false;
 	private boolean mostrarBotaoCancelar;
+	private boolean isInstrutor;
+	private Map<Curso, Boolean> mapaInstrutorCurso;
 
 	public InscricaoCursoBean() {
 		inscricaoInfoComplementar = new InscricaoInfoComplementar();
@@ -552,10 +555,10 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 					for (Curso item : cursosPesq) {
 						/**
-						 * Verifica se o curso é privado ou o candidato é instrutor. Se o curso é por órgão, é
-						 * necessário verificar se o candidato não pertece a algum órgão em questão antes de retornar
+						 * Verifica se o curso é privado ou o candidato é instrutor. Se o curso é por órgão, é necessário verificar se o
+						 * candidato não pertece a algum órgão em questão antes de retornar
 						 */
-						isInstrutor = false;
+						item.setInstrutor(false);
 						if ((item.getPrivado() || !item.getEmailsCursoPrivado().isEmpty()) && !item.getFlgPossuiOficina()) {
 							if (!emailValido(item)) {
 								if (item.getOrgaoCursos() == null || item.getOrgaoCursos().isEmpty()) {
@@ -565,10 +568,10 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						}
 
 						/**
-						 * Se não for instrutor, verifica se o curso é por órgão. Caso seja, o participante deve ser de algum órgao que esteja participando do
-						 * evento para se inscriver.
+						 * Se não for instrutor, verifica se o curso é por órgão. Caso seja, o participante deve ser de algum órgao que
+						 * esteja participando do evento para se inscriver.
 						 */
-						if (!isInstrutor && item.getOrgaoCursos() != null && !item.getOrgaoCursos().isEmpty()) {
+						if (!item.isInstrutor() && item.getOrgaoCursos() != null && !item.getOrgaoCursos().isEmpty()) {
 							boolean pertence = false;
 							Candidato candidato = (Candidato) universalManager.get(Candidato.class, loginBean.getModel().getId());
 							for (OrgaoCurso orgaoCurso : item.getOrgaoCursos()) {
@@ -689,11 +692,15 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	}
 
 	public boolean emailValido(Curso curso) throws Exception {
+		if (mapaInstrutorCurso == null) {
+			mapaInstrutorCurso = new HashMap<>();
+		}
 		boolean emailValido = false;
 		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
 			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {
 				if (email.getTipo() != null && email.getTipo().equals(TipoEmail.INSTRUTOR.getTipo())) {
-					isInstrutor = true;
+					curso.setInstrutor(true);
+					mapaInstrutorCurso.put(curso, curso.isInstrutor());
 				}
 				emailValido = true;
 				break;
@@ -1347,7 +1354,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						for (InscricaoCurso inscricao : inscricoes) {
 							StatusInscricao statusInscricao = inscricaoCursoService.ultimoStatusInscricao(inscricao);
 							inscricao.setStatusUltimo(statusInscricao.getStatus());
-							if (inscricao.getFlgInstrutor()){
+							if (inscricao.getFlgInstrutor()) {
 								inscricao.setTipoInscricao(INSTRUTOR);
 							} else {
 								inscricao.setTipoInscricao(PARTICIPANTE);
@@ -1395,7 +1402,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	public String saveCurso() {
 		try {
 
-			if (cursoSelecionado.getFlgExigeDocumentacao()) {
+			if (cursoSelecionado.getFlgExigeDocumentacao() && !isInstrutor) {
 				if (documentos == null || documentos.isEmpty()) {
 					FacesMessagesUtil.addErrorMessage("Documentação ",
 							"O curso exige documentos comprobatórios conforme descrito no edital.");
@@ -1403,7 +1410,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				}
 			}
 
-			if (!validarCandidatoComplemento()) {
+			if (!validarCandidatoComplemento() && !isInstrutor) {
 				return "";
 			}
 			if (!verificarCurso()) {
@@ -1670,6 +1677,16 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			if (idCursoSelecionado != null && idCursoSelecionado != 0) {
 
 				cursoSelecionado = (Curso) universalManager.get(Curso.class, idCursoSelecionado);
+				
+				isInstrutor = false;
+				if (mapaInstrutorCurso != null && !mapaInstrutorCurso.isEmpty()){
+					for (Entry<Curso, Boolean> entry : mapaInstrutorCurso.entrySet()) {
+						if (entry.getKey().getId().equals(cursoSelecionado.getId())){
+							isInstrutor = entry.getValue();
+							break;
+						}
+					}
+				}
 
 				if (verificarColisaoCurso(cursoSelecionado)) {
 					idCursoSelecionado = null;
@@ -2593,6 +2610,14 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	public void setMostrarBotaoCancelar(boolean mostrarBotaoCancelar) {
 		this.mostrarBotaoCancelar = mostrarBotaoCancelar;
+	}
+
+	public Map<Curso, Boolean> getMapaInstrutorCurso() {
+		return mapaInstrutorCurso;
+	}
+
+	public void setMapaInstrutorCurso(Map<Curso, Boolean> mapaInstrutorCurso) {
+		this.mapaInstrutorCurso = mapaInstrutorCurso;
 	}
 
 	public boolean isInstrutor() {
