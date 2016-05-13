@@ -612,10 +612,11 @@
 									</h:outputLabel>
 								</p:column>
 								<p:column headerText="Status" style="width:20%">
-									<h:outputText value="#{lista.statusUltimo.descricao}" />
+									<h:outputText value="#{lista.ultimoStatus.status.descricao}" />
 								</p:column>
 								<p:column headerText="Tipo Inscrição" style="width:15%">
-									<h:outputText value="#{lista.tipoInscricao}" />
+									<h:outputText value="Instrutor" rendered="#{lista.flgInstrutor}"/>
+									<h:outputText value="Participante" rendered="#{!lista.flgInstrutor}"/>
 								</p:column>
 								<p:column headerText="Selecionar" style="width:10%;text-align:center;">
 									<p:commandLink title="Selecionar" process="@this" update=":form:tabView:panelAcordions,:form:tabView:botaoAbaInscricao"

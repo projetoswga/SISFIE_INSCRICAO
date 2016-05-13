@@ -1345,21 +1345,10 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				@SuppressWarnings({ "rawtypes" })
 				@Override
 				public List<InscricaoCurso> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map filters) {
-					// Reduzindo o contador depois de filtrado
 					try {
 						int rowCount = inscricaoCursoService.countInscricoes(getModel()).intValue();
 						lazyDataModel.setRowCount(rowCount);
 						inscricoes = inscricaoCursoService.paginateInscricoes(first, pageSize, getModel());
-
-						for (InscricaoCurso inscricao : inscricoes) {
-							StatusInscricao statusInscricao = inscricaoCursoService.ultimoStatusInscricao(inscricao);
-							inscricao.setStatusUltimo(statusInscricao.getStatus());
-							if (inscricao.getFlgInstrutor()) {
-								inscricao.setTipoInscricao(INSTRUTOR);
-							} else {
-								inscricao.setTipoInscricao(PARTICIPANTE);
-							}
-						}
 						return inscricoes;
 					} catch (Exception e) {
 						ExcecaoUtil.tratarExcecao(e);
