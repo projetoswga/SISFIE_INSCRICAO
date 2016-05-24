@@ -94,8 +94,6 @@ import br.com.sisfie.util.TipoEmail;
 public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	private static final long serialVersionUID = 1L;
-	private static final String PARTICIPANTE = "Participante";
-	private static final String INSTRUTOR = "Instrutor";
 
 	@ManagedProperty(value = "#{inscricaoCursoService}")
 	protected InscricaoCursoService inscricaoCursoService;
@@ -554,17 +552,22 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					List<Curso> cursosPesq = cursoService.listarCursosDisponiveis();
 
 					for (Curso item : cursosPesq) {
+						
 						/**
-						 * Verifica se o curso é privado ou o candidato é instrutor. Se o curso é por órgão, é necessário verificar se o
-						 * candidato não pertece a algum órgão em questão antes de retornar
+						 * Verifica se o curso é privado e o candidato tem acesso
+						 */
+						if (item.getPrivado()) {
+							if (!temAcessoCursoPrivado(item)) {
+								continue;
+							}
+						}
+						
+						/**
+						 * Verifica se o candidato é instrutor.
 						 */
 						item.setInstrutor(false);
-						if ((item.getPrivado() || !item.getEmailsCursoPrivado().isEmpty()) && !item.getFlgPossuiOficina()) {
-							if (!emailValido(item)) {
-								if (item.getOrgaoCursos() == null || item.getOrgaoCursos().isEmpty()) {
-									continue;
-								}
-							}
+						if (!item.getEmailsCursoPrivado().isEmpty() && !item.getFlgPossuiOficina()) {
+							mapearInstrutorCurso(item);
 						}
 
 						/**
@@ -691,22 +694,30 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		}
 	}
 
-	public boolean emailValido(Curso curso) throws Exception {
+	public boolean temAcessoCursoPrivado(Curso curso) throws Exception {
+		boolean temAcesso = false;
+		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
+			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {
+				temAcesso = true;
+				break;
+			}
+		}
+		return temAcesso;
+	}
+
+	public void mapearInstrutorCurso(Curso curso) throws Exception {
 		if (mapaInstrutorCurso == null) {
 			mapaInstrutorCurso = new HashMap<>();
 		}
-		boolean emailValido = false;
 		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
 			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {
 				if (email.getTipo() != null && email.getTipo().equals(TipoEmail.INSTRUTOR.getTipo())) {
 					curso.setInstrutor(true);
 					mapaInstrutorCurso.put(curso, curso.isInstrutor());
 				}
-				emailValido = true;
-				break;
+				return;
 			}
 		}
-		return emailValido;
 	}
 
 	public void onChange(TabChangeEvent event) {
