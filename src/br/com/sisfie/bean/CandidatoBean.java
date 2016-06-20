@@ -1,6 +1,7 @@
 package br.com.sisfie.bean;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -185,6 +186,17 @@ public class CandidatoBean extends BaseBean<Candidato> {
 	@Override
 	public String save() {
 		try {
+			// validar a data de nascimento
+			if (getModel().getDataNascimento() != null){
+				Calendar dataAtual = Calendar.getInstance();
+				Calendar dataNasc = Calendar.getInstance();
+				dataNasc.setTime(getModel().getDataNascimento());
+				if (dataNasc.get(Calendar.YEAR) == dataAtual.get(Calendar.YEAR)){
+					FacesMessagesUtil.addErrorMessage("", "Data de nascimento inválida!");
+					return "";
+				}
+			}
+			
 			// validar se existe (@ ou -) no nome completo
 			if (getModel().getNome() != null && !getModel().getNome().isEmpty()) {
 				for (int i = 0; i < getModel().getNome().length(); i++) {
