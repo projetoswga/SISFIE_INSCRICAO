@@ -27,6 +27,7 @@ import br.com.sisfie.entidade.InscricaoCurso;
 import br.com.sisfie.entidade.Status;
 import br.com.sisfie.entidade.StatusCurso;
 import br.com.sisfie.entidade.StatusInscricao;
+import br.com.sisfie.util.TipoEmail;
 
 @Repository(value = "cursoDAO")
 public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
@@ -195,7 +196,7 @@ public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<EmailCursoPrivado> listarCursosDisponiveisParceiros(String emailParceiro) throws Exception {
+	public List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception {
 		Criteria criteria = getSession().createCriteria(EmailCursoPrivado.class);
 		criteria.createAlias("curso", "c");
 		criteria.add(Restrictions.lt("c.dtTerminoInscricao", DateUtil.getDateSemHora(new Date())));

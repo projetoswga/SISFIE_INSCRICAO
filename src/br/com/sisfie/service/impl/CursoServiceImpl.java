@@ -72,7 +72,7 @@ public class CursoServiceImpl implements CursoService {
 	}
 
 	@Override
-	public List<EmailCursoPrivado> listarCursosDisponiveisParceiros(String emailParceiro) throws Exception {
-		return cursoDAO.listarCursosDisponiveisParceiros(emailParceiro);
+	public List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception {
+		return cursoDAO.listarCursosDisponiveisParceirosOuInstrutores(emailParceiro);
 	}
 }

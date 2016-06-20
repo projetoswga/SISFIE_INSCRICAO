@@ -5,6 +5,14 @@
 	template="/templates/template.xhtml">
 
 	<ui:define name="body">
+	
+		<script type="text/javascript">
+			function alteraLetrasMinusculas(lstr){
+				var str=lstr.value;
+			    lstr.value=str.toLowerCase();
+			}
+		</script>
+		
 		<f:metadata>
 			<f:event type="preRenderView" listener="#{candidatoBean.validarCaptcha}" />
 		</f:metadata>
@@ -83,7 +91,7 @@
 					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%" >
 						<h:outputLabel value="E-mail Pessoal" />
 						<p:inputText autocomplete="off" value="#{candidatoBean.model.emailPessoal}" id="emailPessoa" size="50"
-							maxlength="255" />
+							maxlength="255" onkeyup="alteraLetrasMinusculas(this);" onblur="alteraLetrasMinusculas(this);"/>
 						<p:message for="emailPessoa" />
 						<h:outputLabel value="Contato em caso de Emergência:" />
 						<p:inputText value="#{candidatoBean.model.nomeEmergencia}" size="50" maxlength="255"/>
@@ -134,12 +142,12 @@
 
 						<h:outputLabel value="E-mail para acesso ao sistema:" styleClass="icoObrigatorio" />
 						<p:inputText autocomplete="off" value="#{candidatoBean.model.emailInstitucional}" size="50" maxlength="255"
-							id="idEmailInstitucional" requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+							id="idEmailInstitucional" requiredMessage="#{candidatoBean.requiredMessage}" required="true" onkeyup="alteraLetrasMinusculas(this);" onblur="alteraLetrasMinusculas(this);"/>
 						<p:message for="idEmailInstitucional" />
 
 						<h:outputLabel value="Confirmação de E-mail:" styleClass="icoObrigatorio" />
 						<p:inputText autocomplete="off" value="#{candidatoBean.confirmacaoEmail}" size="50" maxlength="255"
-							id="idEmailConfirme" requiredMessage="#{candidatoBean.requiredMessage}" required="true" />
+							id="idEmailConfirme" requiredMessage="#{candidatoBean.requiredMessage}" required="true" onkeyup="alteraLetrasMinusculas(this);" onblur="alteraLetrasMinusculas(this);"/>
 						<p:message for="idEmailConfirme" />
 
 						<h:outputLabel value="Matrícula do Chefe:" />
@@ -151,9 +159,10 @@
 				<p:panel header="Telefone(s)">
 					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
 
-						<h:outputLabel value="Telefone Com.:" />
-						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telComercial}" size="20" maxlength="255" />
-						<h:outputText value="" />
+						<h:outputLabel value="Telefone Com.:" styleClass="icoObrigatorio"/>
+						<p:inputMask id="idTelComercial" mask="(99)99999999?9" value="#{candidatoBean.model.telComercial}" size="20" maxlength="255" 
+							requiredMessage="#{candidatoBean.requiredMessage}" required="true"/>
+						<p:message for="idTelComercial" />
 
 						<h:outputLabel value="Telefone Cel.:" />
 						<p:inputMask mask="(99)99999999?9" value="#{candidatoBean.model.telCelular}" size="20" maxlength="255" />

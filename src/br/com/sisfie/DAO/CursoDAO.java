@@ -20,6 +20,6 @@ public interface CursoDAO {
 
 	Integer countInscritosCancelados(Integer idCurso);
 
-	List<EmailCursoPrivado> listarCursosDisponiveisParceiros(String emailParceiro) throws Exception;
+	List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception;
 
 }

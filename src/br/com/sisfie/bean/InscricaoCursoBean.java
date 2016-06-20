@@ -142,7 +142,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	public static final Integer PERSISTIR = 1;
 	public static final Integer REMOVER = 2;
-	private static final Integer LIMITE_INSCRICAO_FORA_PRAZO = 17;
+	private static final Integer LIMITE_INSCRICAO_FORA_PRAZO = 15;
 	private static final Integer PRAZO_LIMITE_CANCELAMENTO = 19;
 
 	private String context = getContextPath();
@@ -615,22 +615,23 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					 * 'inscrição' compreende da data fim convencional de inscrição até 17 dias antes do início do curso. TODO: Rever isso
 					 * com a esaf.
 					 */
-					List<EmailCursoPrivado> listaParceirosCursosComOficinasForaPrazoInscricao = cursoService
-							.listarCursosDisponiveisParceiros(loginBean.getModel().getEmailInstitucional());
+					List<EmailCursoPrivado> listaParceirosOuInstrutoresForaPrazoInscricao = cursoService
+							.listarCursosDisponiveisParceirosOuInstrutores(loginBean.getModel().getEmailInstitucional());
 
-					if (listaParceirosCursosComOficinasForaPrazoInscricao != null
-							&& !listaParceirosCursosComOficinasForaPrazoInscricao.isEmpty()) {
+					if (listaParceirosOuInstrutoresForaPrazoInscricao != null
+							&& !listaParceirosOuInstrutoresForaPrazoInscricao.isEmpty()) {
 
-						for (EmailCursoPrivado emailParceiro : listaParceirosCursosComOficinasForaPrazoInscricao) {
-							if (emailParceiro.getCurso().getFlgPossuiOficina() && DateUtil.diferencaEntreDatas(new Date(),
-									emailParceiro.getCurso().getDtRealizacaoInicio()) >= LIMITE_INSCRICAO_FORA_PRAZO) {
-
-								String periodo = DateUtil.getDataHora(emailParceiro.getCurso().getDtRealizacaoInicio(),
-										"dd/MM/yyyy") + " a "
-										+ DateUtil.getDataHora(emailParceiro.getCurso().getDtRealizacaoFim(), "dd/MM/yyyy");
-								String label = emailParceiro.getCurso().getTitulo() + " - " + periodo;
-								SelectItem selectItem = new SelectItem(emailParceiro.getCurso().getId(), label);
-								cursos.add(selectItem);
+						for (EmailCursoPrivado emailParceiroOuInstrutor : listaParceirosOuInstrutoresForaPrazoInscricao) {
+							if (emailParceiroOuInstrutor.getCurso().getFlgPossuiOficina()){
+								if (emailParceiroOuInstrutor.getTipo().equals(TipoEmail.PARCEIRO.getTipo()) && DateUtil.diferencaEntreDatas(new Date(),
+										emailParceiroOuInstrutor.getCurso().getDtRealizacaoInicio()) >= LIMITE_INSCRICAO_FORA_PRAZO) {
+									
+									adicionarCurso(emailParceiroOuInstrutor);
+								}
+							} else if (emailParceiroOuInstrutor.getTipo().equals(TipoEmail.INSTRUTOR.getTipo()) && DateUtil.diferencaEntreDatas(new Date(),
+									emailParceiroOuInstrutor.getCurso().getDtRealizacaoInicio()) >= LIMITE_INSCRICAO_FORA_PRAZO) {
+								
+								adicionarCurso(emailParceiroOuInstrutor);
 							}
 						}
 					}
@@ -692,6 +693,15 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
+	}
+
+	private void adicionarCurso(EmailCursoPrivado emailParceiroOuInstrutor) {
+		String periodo = DateUtil.getDataHora(emailParceiroOuInstrutor.getCurso().getDtRealizacaoInicio(),
+				"dd/MM/yyyy") + " a "
+				+ DateUtil.getDataHora(emailParceiroOuInstrutor.getCurso().getDtRealizacaoFim(), "dd/MM/yyyy");
+		String label = emailParceiroOuInstrutor.getCurso().getTitulo() + " - " + periodo;
+		SelectItem selectItem = new SelectItem(emailParceiroOuInstrutor.getCurso().getId(), label);
+		cursos.add(selectItem);
 	}
 
 	public boolean temAcessoCursoPrivado(Curso curso) throws Exception {
