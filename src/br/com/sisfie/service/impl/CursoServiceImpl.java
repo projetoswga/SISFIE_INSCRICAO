@@ -13,6 +13,7 @@ import br.com.sisfie.DAO.CursoDAO;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.EmailCursoPrivado;
 import br.com.sisfie.entidade.InscricaoCurso;
+import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.StatusCurso;
 import br.com.sisfie.entidade.StatusInscricao;
 import br.com.sisfie.service.CursoService;
@@ -74,5 +75,12 @@ public class CursoServiceImpl implements CursoService {
 	@Override
 	public List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception {
 		return cursoDAO.listarCursosDisponiveisParceirosOuInstrutores(emailParceiro);
+	}
+
+	@Override
+	public InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(
+			Integer i) throws Exception {
+		
+		return cursoDAO.carregaInscricaoCursoCertPorIdInscricao( i);
 	}
 }

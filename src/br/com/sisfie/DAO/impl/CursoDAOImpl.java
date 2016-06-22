@@ -24,10 +24,10 @@ import br.com.sisfie.DAO.CursoDAO;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.EmailCursoPrivado;
 import br.com.sisfie.entidade.InscricaoCurso;
+import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.Status;
 import br.com.sisfie.entidade.StatusCurso;
 import br.com.sisfie.entidade.StatusInscricao;
-import br.com.sisfie.util.TipoEmail;
 
 @Repository(value = "cursoDAO")
 public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
@@ -48,6 +48,13 @@ public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
 	 * 
 	 * @throws ParseException
 	 */
+	
+	@Override
+	public InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer id) throws Exception{
+		String hql = "from InscricaoCursoCertificado icc where icc.inscricaoCurso.id = :id";
+		
+		return (InscricaoCursoCertificado) getSession().createQuery(hql).setInteger("id", id).uniqueResult();
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Curso> listarCursoDisponiveis() throws Exception {

@@ -625,6 +625,12 @@
 										<f:setPropertyActionListener target="#{inscricaoCursoBean.inscricaoCursoSelecionado}" value="#{lista}" />
 									</p:commandLink>
 								</p:column>
+								<p:column headerText="Certificado">
+									<p:commandLink title="Certificado" process="@this" update=":form:tabView:panelAcordions,:form:tabView:botaoAbaInscricao"
+										action="#{inscricaoCursoBean.gerarCertificado(lista.id)}">
+										<h:graphicImage library="design/imagem" title="Selecionar" name="icone-documento.png" />
+										</p:commandLink>	
+								</p:column>
 							</p:dataTable>
 							<br />
 							<h:panelGrid width="100%" id="panelAcordions">

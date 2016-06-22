@@ -36,4 +36,5 @@ public interface UniversalDAO extends Serializable {
 	List paginate(int first, int pageSize, String sortField, boolean sortOrder, Map<String, String> filters, Class clazz) throws Exception;
 
 	Long getCount(int first, int pageSize, String sortField, boolean sortOrder, Map<String, String> filters, Class clazz) throws Exception;
+	
 }
