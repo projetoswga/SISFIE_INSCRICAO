@@ -25,6 +25,8 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.varia.NullAppender;
 import org.hibernate.Hibernate;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -282,9 +284,14 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					nonImageVariableMap.put("nanico_name", "Tenente Ribeiro");
 					nonImageVariableMap.put("processo", "2015.333.11");
 					
-					Map<String, String> imageVariablesWithPathMap =new HashMap<String, String>();
-					imageVariablesWithPathMap.put("header_image_logo", "Web/resources/design/imagem/cabecalho.jpg");
+					Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
+					Object pathHeaderLogo = InscricaoCursoBean.class.getResource("../../resources/design/imagem/cabecalho.jpg");
+					if (null != pathHeaderLogo) {
+						imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
+					}
 			 
+					//BasicConfigurator.configure(new NullAppender()); //Necessário para evitar "java.util.NoSuchElementException ... at org.docx4j.utils.Log4jConfigurator.configure(Log4jConfigurator.java:42) [docx4j-2.8.1.jar:]"
+					
 					DocxDocumentMergerAndConverter docxDocumentMergerAndConverter = new DocxDocumentMergerAndConverter();
 					byte[] mergedOutput = docxDocumentMergerAndConverter.mergeAndGeneratePDFOutput(templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, imageVariablesWithPathMap);
 					
@@ -773,7 +780,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	public void mapearInstrutorCurso(Curso curso) throws Exception {
 		if (mapaInstrutorCurso == null) {
-			mapaInstrutorCurso = new HashMap<>();
+			mapaInstrutorCurso = new HashMap<Curso, Boolean>();
 		}
 		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
 			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {

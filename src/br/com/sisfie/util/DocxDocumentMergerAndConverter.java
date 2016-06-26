@@ -148,8 +148,13 @@ public class DocxDocumentMergerAndConverter {
 	public byte[] mergeAndGeneratePDFOutput(String templatePath, TemplateEngineKind templateEngineKind, Map<String, Object> nonImageVariableMap,Map<String, String> imageVariablesWithPathMap ) throws IOException, XDocReportException, Docx4JException{
 		InputStream inputStream = loadDocumentAsStream(templatePath);
 		IXDocReport xdocReport = loadDocumentAsIDocxReport(inputStream,templateEngineKind);
-		IContext context = replaceVariabalesInTemplateOtherThanImages(xdocReport,nonImageVariableMap);
-		replaceImagesVariabalesInTemplate(xdocReport, imageVariablesWithPathMap, context);
+		IContext context = null;
+		if (null != nonImageVariableMap && !nonImageVariableMap.values().isEmpty()) {
+			context = replaceVariabalesInTemplateOtherThanImages(xdocReport,nonImageVariableMap);
+		}
+		if (null != imageVariablesWithPathMap && !imageVariablesWithPathMap.values().isEmpty()) {
+			replaceImagesVariabalesInTemplate(xdocReport, imageVariablesWithPathMap, context);
+		}
 		byte[] mergedOutput = generateMergedOutput(xdocReport, context);
 		byte[] pdfBytes = generatePDFOutputFromDocx(mergedOutput);
 		return pdfBytes;
