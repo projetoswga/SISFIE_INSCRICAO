@@ -23,6 +23,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.BasicConfigurator;
@@ -33,6 +34,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+
+import com.lowagie.text.pdf.codec.Base64.OutputStream;
 
 import br.com.arquitetura.bean.PaginableBean;
 import br.com.arquitetura.excecao.ExcecaoUtil;
@@ -295,32 +298,31 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					DocxDocumentMergerAndConverter docxDocumentMergerAndConverter = new DocxDocumentMergerAndConverter();
 					byte[] mergedOutput = docxDocumentMergerAndConverter.mergeAndGeneratePDFOutput(templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, imageVariablesWithPathMap);
 					
-					FileOutputStream os = null;
+					ServletOutputStream sos = null;
+					FacesContext context = FacesContext.getCurrentInstance();
 					try {
-						HttpServletResponse res = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+						
+						HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
 			            res.setContentType("application/pdf");
 			            //Código abaixo gerar o relatório e disponibiliza diretamente na página 
 			            res.setHeader("Content-disposition", "inline;filename=arquivo.pdf");
 			            //Código abaixo gerar o relatório e disponibiliza para o cliente baixar ou salvar 
-			            //res.setHeader("Content-disposition", "attachment;filename=arquivo.pdf");
-			            os = new FileOutputStream(m.getUrl()+sdfSimply.format(Calendar.getInstance().getTime())+".pdf");
-			            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			            		// grava bytes no BOS
-			            		bos.writeTo( os );
-			            res.getOutputStream().write(mergedOutput );
+			            sos = res.getOutputStream();
+			            sos.write(mergedOutput);
+			            System.out.println("Cerficado gerado a partir do template: " + templatePath);
 			            
-			            res.getCharacterEncoding();
-			            FacesContext.getCurrentInstance().responseComplete();
-			            System.out.println("saiu do visualizar relatorio");
-						
-						
-//						
-//						os.write(mergedOutput);
-						os.flush();
-						os.close();
+			            // TODO REMOVER TRECHO ABAIXO
+			            FileOutputStream fos = new FileOutputStream(new File("c:/temp/certificado123321.pdf"));
+			            fos.write(mergedOutput);
+			            fos.close();
 					} finally {
-						if (null != os)
-							os.close();
+						if (null != sos) {
+							sos.flush();
+							sos.close();
+						}
+			            //FacesContext.getCurrentInstance().responseComplete();  //NOT WORK
+			    		context.renderResponse();
+			    		context.responseComplete();
 					}
 				}
 			}

@@ -45,11 +45,4 @@
 		<nature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</nature>
 		<nature>org.jboss.tools.jst.web.kb.kbnature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>docx4j-2.8.1-sources.jar</name>
-			<type>2</type>
-			<location>C:/ambdes/docx4j-2.8.1-sources.jar</location>
-		</link>
-	</linkedResources>
 </projectDescription>
