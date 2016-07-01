@@ -699,6 +699,9 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 								}
 							} else if (emailParceiroOuInstrutor.getTipo().equals(TipoEmail.INSTRUTOR.getTipo())) {
 								emailParceiroOuInstrutor.getCurso().setInstrutor(true);
+								if (mapaInstrutorCurso == null){
+									mapaInstrutorCurso = new HashMap<>();
+								}
 								mapaInstrutorCurso.put(emailParceiroOuInstrutor.getCurso(), emailParceiroOuInstrutor.getCurso().isInstrutor());
 								adicionarCurso(emailParceiroOuInstrutor);
 							}
