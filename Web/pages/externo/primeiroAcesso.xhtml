@@ -19,7 +19,7 @@
 
 		<h:form prependId="false">
 			<p:fieldset legend="Cadastro de Candidato">
-				<p:panel header="Dados Pessoal">
+				<p:panel header="Dados Pessoais">
 					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
 						<h:outputLabel value="Nome Completo:" styleClass="icoObrigatorio" />
 						<p:inputText value="#{candidatoBean.model.nome}" size="50" maxlength="255" id="idNome"
@@ -111,7 +111,7 @@
 					</h:panelGrid>
 				</p:panel>
 				
-				<p:panel header="Dados Institucional">
+				<p:panel header="Dados Institucionais">
 					<h:panelGrid columns="3" border="0" columnClasses="coluna20,coluna60,coluna20" width="100%">
 						<h:outputLabel value="orgão:" styleClass="icoObrigatorio" />
 						<p:autoComplete queryDelay="500" value="#{candidatoBean.orgaoSelecionado}" minQueryLength="2" id="idOrgaos"
