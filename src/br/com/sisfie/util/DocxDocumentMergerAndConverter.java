@@ -151,6 +151,8 @@ public class DocxDocumentMergerAndConverter {
 		IContext context = null;
 		if (null != nonImageVariableMap && !nonImageVariableMap.values().isEmpty()) {
 			context = replaceVariabalesInTemplateOtherThanImages(xdocReport,nonImageVariableMap);
+		} else {
+			context = xdocReport.createContext();
 		}
 		if (null != imageVariablesWithPathMap && !imageVariablesWithPathMap.values().isEmpty()) {
 			replaceImagesVariabalesInTemplate(xdocReport, imageVariablesWithPathMap, context);

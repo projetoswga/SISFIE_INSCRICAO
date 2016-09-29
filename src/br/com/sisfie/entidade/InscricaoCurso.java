@@ -102,6 +102,9 @@ public class InscricaoCurso extends Entidade<Integer> {
 	
 	@Transient
 	private String tipoInscricao;
+	
+	@Transient
+	private boolean exibirCertificado;
 
 	public InscricaoCurso() {
 	}
@@ -274,5 +277,13 @@ public class InscricaoCurso extends Entidade<Integer> {
 
 	public void setTipoInscricao(String tipoInscricao) {
 		this.tipoInscricao = tipoInscricao;
+	}
+
+	public boolean isExibirCertificado() {
+		return exibirCertificado;
+	}
+
+	public void setExibirCertificado(boolean exibirCertificado) {
+		this.exibirCertificado = exibirCertificado;
 	}
 }

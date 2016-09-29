@@ -20,6 +20,7 @@ import br.com.sisfie.entidade.Atuacao;
 import br.com.sisfie.entidade.Cargo;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoCurso;
+import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.InscricaoDocumento;
 import br.com.sisfie.entidade.Status;
 import br.com.sisfie.entidade.StatusInscricao;
@@ -84,12 +85,28 @@ public class InscricaoCursoDAOImpl extends HibernateDaoSupport implements Inscri
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<InscricaoCurso> paginateInscricoes(int first, int pageSize, InscricaoCurso model) {
+		
 		Criteria c = retornarCriteria(model);
 		if (first != 0)
 			c.setFirstResult(first);
 		if (pageSize != 0)
 			c.setMaxResults(pageSize);
-		return c.list();
+		
+		List<InscricaoCurso> listaInscricaoCurso = c.list();
+		if (listaInscricaoCurso != null && !listaInscricaoCurso.isEmpty()) {
+			for (InscricaoCurso inscricaoCurso : listaInscricaoCurso) {
+				Criteria criteriaCertificado = getSession().createCriteria(InscricaoCursoCertificado.class);
+				criteriaCertificado.createAlias("inscricaoCurso", "ic");
+				criteriaCertificado.add(Restrictions.eq("ic.id", inscricaoCurso.getId()));
+				criteriaCertificado.add(Restrictions.eq("flgHomologado", true));
+				criteriaCertificado.setProjection(Projections.rowCount());
+				Long count = (Long) criteriaCertificado.list().get(0);
+				if (count != null && count > 0) {
+					inscricaoCurso.setExibirCertificado(true);
+				}
+			}
+		}
+		return listaInscricaoCurso;
 	}
 
 	private Criteria retornarCriteria(InscricaoCurso model) {
@@ -98,7 +115,6 @@ public class InscricaoCursoDAOImpl extends HibernateDaoSupport implements Inscri
 		}
 		Criteria criteria = getSession().createCriteria(InscricaoCurso.class);
 		criteria.add(Restrictions.eq("candidato.id", model.getCandidato().getId()));
-		//criteria.add(Restrictions.eq("flgInstrutor", false));
 		return criteria;
 	}
 

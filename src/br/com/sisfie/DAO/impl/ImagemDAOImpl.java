@@ -11,6 +11,7 @@ import br.com.sisfie.DAO.ImagemDAO;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
+import br.com.sisfie.entidade.ModeloDocumento;
 
 @Repository(value = "ImagemDAO")
 public class ImagemDAOImpl extends HibernateDaoSupport implements ImagemDAO {
@@ -39,5 +40,12 @@ public class ImagemDAOImpl extends HibernateDaoSupport implements ImagemDAO {
 		Criteria c = getSession().createCriteria(Curso.class);
 		c.add(Restrictions.eq("id", idCurso));
 		return (Curso) c.uniqueResult();
+	}
+
+	@Override
+	public ModeloDocumento carregarCertificadoId(Integer idCertificado) {
+		Criteria c = getSession().createCriteria(ModeloDocumento.class);
+		c.add(Restrictions.eq("id", idCertificado));
+		return (ModeloDocumento) c.uniqueResult();
 	}
 }

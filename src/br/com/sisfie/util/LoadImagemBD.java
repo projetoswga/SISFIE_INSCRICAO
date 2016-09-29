@@ -6,7 +6,12 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -20,11 +25,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import com.lowagie.text.FontFactory;
+
 import br.com.arquitetura.excecao.ExcecaoUtil;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
+import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.InscricaoDocumento;
+import br.com.sisfie.entidade.ModeloDocumento;
+import br.com.sisfie.service.CursoService;
 import br.com.sisfie.service.ImagemService;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 @Component
 @WebServlet("/loadImagemBD")
@@ -34,11 +45,16 @@ public class LoadImagemBD extends HttpServlet {
 	@Autowired(required = true)
 	@Qualifier(value = "ImagemService")
 	public ImagemService imagemService;
-
+	
+	@Autowired(required = true)
+	@Qualifier(value = "cursoService")
+	public CursoService cursoService;
+	
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // 10KB.
 	private static final String DOCUMENTO = "documento";
 	private static final String COMPROVANTE = "comprovante";
 	private static final String FREQUENCIA = "frequencia";
+	public static final String CERTIFICADO = "certificado";
 
 	public void init(ServletConfig config) throws ServletException {
 		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
@@ -62,6 +78,8 @@ public class LoadImagemBD extends HttpServlet {
 					processRequestComprovante(request, response);
 				} else if (tipo.equals(FREQUENCIA)) {
 					processRequestFrequencia(request, response);
+				} else if (tipo.equals(CERTIFICADO)) {
+					processRequestCertificado(request, response);
 				}
 			} else {
 				throw new Exception("Parâmetro não encontrado");
@@ -71,6 +89,24 @@ public class LoadImagemBD extends HttpServlet {
 		}
 	}
 
+	private void processRequestCertificado(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			String idInscricaoCurso = (String) request.getParameter("idInscricaoCurso");
+			InscricaoCursoCertificado inscricaoCursoCertificado = cursoService
+					.carregaInscricaoCursoCertPorIdInscricao(Integer.parseInt(idInscricaoCurso));
+
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
+					inscricaoCursoCertificado.getModeloDocumento().getUrl(), TemplateEngineKind.Freemarker, null, null);
+
+			response.getOutputStream().write(mergedOutput);
+
+			enviarImagem(request, response, inscricaoCursoCertificado.getModeloDocumento().getUrl(),
+					inscricaoCursoCertificado.getModeloDocumento().getNomTipo());
+		} catch (Exception e) {
+			ExcecaoUtil.tratarExcecao(e);
+		}
+	}
+	
 	private void processRequestFrequencia(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			Curso curso = null;

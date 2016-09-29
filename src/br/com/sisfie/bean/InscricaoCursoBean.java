@@ -2,6 +2,7 @@ package br.com.sisfie.bean;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ import br.com.sisfie.util.Constantes;
 import br.com.sisfie.util.CpfUtil;
 import br.com.sisfie.util.DocxDocumentMergerAndConverter;
 import br.com.sisfie.util.ImagemUtil;
+import br.com.sisfie.util.LoadImagemBD;
 import br.com.sisfie.util.TipoEmail;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
@@ -265,62 +267,10 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		getModel().getCurso().setLocalizacao(new Localizacao());
 	}
 	
-	public void gerarCertificado(Integer i){
+	public void gerarCertificado(Integer id){
 		try {
-			if(i!=null){
-				InscricaoCursoCertificado icc = cursoService.carregaInscricaoCursoCertPorIdInscricao(i);
-				ModeloDocumento m = icc.getModeloDocumento();
-				if(m!=null){
-					String templatePath  = m.getUrl();
-					SimpleDateFormat sdfFormatted = new SimpleDateFormat("dd/MM/YYYY");
-					SimpleDateFormat sdfSimply = new SimpleDateFormat("ddMMYYYY");
-					Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
-					nonImageVariableMap.put("thank_you_date", sdfFormatted.format(Calendar.getInstance().getTime()));
-					nonImageVariableMap.put("name", icc.getInscricaoCurso().getCandidato().getNome());
-					nonImageVariableMap.put("website", icc.getInscricaoCurso().getCurso().getTitulo());
-					nonImageVariableMap.put("author_name", icc.getInscricaoCurso().getNumeroInscricao());
-					nonImageVariableMap.put("nanico_name", "Tenente Ribeiro");
-					nonImageVariableMap.put("processo", "2015.333.11");
-					
-					Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
-					Object pathHeaderLogo = InscricaoCursoBean.class.getResource("../../resources/design/imagem/cabecalho.jpg");
-					if (null != pathHeaderLogo) {
-						imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
-					}
-			 
-					//BasicConfigurator.configure(new NullAppender()); //Necessário para evitar "java.util.NoSuchElementException ... at org.docx4j.utils.Log4jConfigurator.configure(Log4jConfigurator.java:42) [docx4j-2.8.1.jar:]"
-					
-					DocxDocumentMergerAndConverter docxDocumentMergerAndConverter = new DocxDocumentMergerAndConverter();
-					byte[] mergedOutput = docxDocumentMergerAndConverter.mergeAndGeneratePDFOutput(templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, imageVariablesWithPathMap);
-					
-					ServletOutputStream sos = null;
-					FacesContext context = FacesContext.getCurrentInstance();
-					try {
-						
-						HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
-			            res.setContentType("application/pdf");
-			            //Código abaixo gerar o relatório e disponibiliza diretamente na página 
-			            res.setHeader("Content-disposition", "inline;filename=arquivo.pdf");
-			            //Código abaixo gerar o relatório e disponibiliza para o cliente baixar ou salvar 
-			            sos = res.getOutputStream();
-			            sos.write(mergedOutput);
-			            System.out.println("Cerficado gerado a partir do template: " + templatePath);
-			            
-			            // TODO REMOVER TRECHO ABAIXO
-			            FileOutputStream fos = new FileOutputStream(new File("c:/temp/certificado123321.pdf"));
-			            fos.write(mergedOutput);
-			            fos.close();
-					} finally {
-						if (null != sos) {
-							sos.flush();
-							sos.close();
-						}
-			            //FacesContext.getCurrentInstance().responseComplete();  //NOT WORK
-			    		context.renderResponse();
-			    		context.responseComplete();
-					}
-				}
-			}
+			String url = Constantes.getCaminhoAplicacao() + "/loadImagemBD?idInscricaoCurso=" + id + "&tipo=" + LoadImagemBD.CERTIFICADO;
+			FacesContext.getCurrentInstance().getExternalContext().redirect(url);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}

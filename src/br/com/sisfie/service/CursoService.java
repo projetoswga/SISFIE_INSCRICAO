@@ -22,7 +22,6 @@ public interface CursoService {
 	Integer countInscritosCancelados(Integer idCurso);
 
 	List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception;
-	InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer i)throws Exception ;
 	
-
+	InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer idInscricaoCurso)throws Exception ;
 }

@@ -79,8 +79,8 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(
-			Integer i) throws Exception {
+			Integer idInscricaoCurso) throws Exception {
 		
-		return cursoDAO.carregaInscricaoCursoCertPorIdInscricao( i);
+		return cursoDAO.carregaInscricaoCursoCertPorIdInscricao(idInscricaoCurso);
 	}
 }

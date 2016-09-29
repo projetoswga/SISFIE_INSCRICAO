@@ -50,10 +50,16 @@ public class CursoDAOImpl extends HibernateDaoSupport implements CursoDAO {
 	 */
 	
 	@Override
-	public InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer id) throws Exception{
-		String hql = "from InscricaoCursoCertificado icc where icc.inscricaoCurso.id = :id";
+	public InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer idInscricaoCurso) throws Exception{
+		Criteria criteriaCertificado = getSession().createCriteria(InscricaoCursoCertificado.class);
+		criteriaCertificado.createAlias("inscricaoCurso", "ic");
+		criteriaCertificado.add(Restrictions.eq("ic.id", idInscricaoCurso));
 		
-		return (InscricaoCursoCertificado) getSession().createQuery(hql).setInteger("id", id).uniqueResult();
+		InscricaoCursoCertificado inscricaoCursoCertificado = (InscricaoCursoCertificado) criteriaCertificado.uniqueResult();
+		Hibernate.initialize(inscricaoCursoCertificado);
+		Hibernate.initialize(inscricaoCursoCertificado.getModeloDocumento());
+		
+		return inscricaoCursoCertificado;
 	}
 	@SuppressWarnings("unchecked")
 	@Override

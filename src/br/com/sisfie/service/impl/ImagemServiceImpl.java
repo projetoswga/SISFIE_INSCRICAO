@@ -10,6 +10,7 @@ import br.com.sisfie.DAO.ImagemDAO;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoDocumento;
+import br.com.sisfie.entidade.ModeloDocumento;
 import br.com.sisfie.service.ImagemService;
 
 @Service(value = "ImagemService")
@@ -33,5 +34,10 @@ public class ImagemServiceImpl implements ImagemService {
 	@Override
 	public Curso carregarCursoId(Integer idCurso) {
 		return imagemDAO.carregarCursoId(idCurso);
+	}
+
+	@Override
+	public ModeloDocumento carregarCertificadoId(Integer idCertificado) {
+		return imagemDAO.carregarCertificadoId(idCertificado);
 	}
 }
