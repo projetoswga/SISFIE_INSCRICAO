@@ -2,11 +2,8 @@ package br.com.sisfie.bean;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -23,8 +20,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.Hibernate;
 import org.primefaces.context.RequestContext;
@@ -59,12 +55,10 @@ import br.com.sisfie.entidade.HomologacaoCurso;
 import br.com.sisfie.entidade.Horario;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoCurso;
-import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.InscricaoDocumento;
 import br.com.sisfie.entidade.InscricaoGrade;
 import br.com.sisfie.entidade.InscricaoInfoComplementar;
 import br.com.sisfie.entidade.Localizacao;
-import br.com.sisfie.entidade.ModeloDocumento;
 import br.com.sisfie.entidade.Municipio;
 import br.com.sisfie.entidade.MunicipioCurso;
 import br.com.sisfie.entidade.OpcaoListaCandidato;
@@ -94,11 +88,9 @@ import br.com.sisfie.service.TurmaService;
 import br.com.sisfie.util.CnpjUtil;
 import br.com.sisfie.util.Constantes;
 import br.com.sisfie.util.CpfUtil;
-import br.com.sisfie.util.DocxDocumentMergerAndConverter;
 import br.com.sisfie.util.ImagemUtil;
 import br.com.sisfie.util.LoadImagemBD;
 import br.com.sisfie.util.TipoEmail;
-import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 @ManagedBean(name = "inscricaoCursoBean")
 @ViewScoped
@@ -269,11 +261,17 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	
 	public void gerarCertificado(Integer id){
 		try {
-			String url = Constantes.getCaminhoAplicacao() + "/loadImagemBD?idInscricaoCurso=" + id + "&tipo=" + LoadImagemBD.CERTIFICADO;
+			String url = recuperarUrl() + "/loadImagemBD?idInscricaoCurso=" + id + "&tipo=" + LoadImagemBD.CERTIFICADO;
 			FacesContext.getCurrentInstance().getExternalContext().redirect(url);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
+	}
+
+	private String recuperarUrl() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+		return request.getRequestURL().toString().split(request.getServletPath())[0];
 	}
 
 	public void carregarOficinasGradeOficina(AjaxBehaviorEvent event) {

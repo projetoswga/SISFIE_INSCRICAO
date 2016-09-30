@@ -6,12 +6,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -25,14 +20,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import com.lowagie.text.FontFactory;
-
 import br.com.arquitetura.excecao.ExcecaoUtil;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.InscricaoDocumento;
-import br.com.sisfie.entidade.ModeloDocumento;
 import br.com.sisfie.service.CursoService;
 import br.com.sisfie.service.ImagemService;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
