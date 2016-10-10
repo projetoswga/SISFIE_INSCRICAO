@@ -259,14 +259,20 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		getModel().getCurso().setLocalizacao(new Localizacao());
 	}
 	
-	public void gerarCertificado(Integer id){
+	public void gerarCertificado(Integer id,Integer idCandidato,Integer idCurso){
 		try {
-			String url = recuperarUrl() + "/loadImagemBD?idInscricaoCurso=" + id + "&tipo=" + LoadImagemBD.CERTIFICADO;
+			
+			
+			
+			String url = recuperarUrl() + "/loadImagemBD?idInscricaoCurso=" + id +"&idCurso="+idCurso   +"&idCandidato="+idCandidato  + "&tipo=" + LoadImagemBD.CERTIFICADO;
 			FacesContext.getCurrentInstance().getExternalContext().redirect(url);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
 	}
+	
+	
+	
 
 	private String recuperarUrl() {
 		FacesContext context = FacesContext.getCurrentInstance();

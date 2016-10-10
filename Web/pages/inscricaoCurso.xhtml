@@ -627,7 +627,7 @@
 								</p:column>
 								<p:column headerText="Certificado">
 									<h:commandLink title="Certificado" target="_blank"
-										action="#{inscricaoCursoBean.gerarCertificado(lista.id)}" rendered="#{lista.exibirCertificado}" >
+										action="#{inscricaoCursoBean.gerarCertificado(lista.id,lista.candidato.id,lista.curso.id)}" rendered="#{lista.exibirCertificado}" >
 										<h:graphicImage library="design/imagem" title="Selecionar" name="icone-documento.png" />
 										</h:commandLink>	
 								</p:column>

@@ -2,6 +2,7 @@ package br.com.sisfie.service;
 
 import java.util.List;
 
+import br.com.sisfie.entidade.Candidato;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.EmailCursoPrivado;
 import br.com.sisfie.entidade.InscricaoCurso;
@@ -24,4 +25,8 @@ public interface CursoService {
 	List<EmailCursoPrivado> listarCursosDisponiveisParceirosOuInstrutores(String emailParceiro) throws Exception;
 	
 	InscricaoCursoCertificado carregaInscricaoCursoCertPorIdInscricao(Integer idInscricaoCurso)throws Exception ;
+
+
+
+	Curso carregaCursoById(Integer id) throws Exception;
 }

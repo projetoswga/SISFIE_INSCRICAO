@@ -39,11 +39,11 @@ public class InscricaoCurso extends Entidade<Integer> {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "InscricaoCurso")
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_candidato", nullable = false)
 	private Candidato candidato;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_curso", nullable = false)
 	private Curso curso;
 

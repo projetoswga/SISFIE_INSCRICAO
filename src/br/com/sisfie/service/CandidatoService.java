@@ -8,4 +8,6 @@ public interface CandidatoService {
 
 	Integer recuperarParceiro(String email);
 
+	Candidato get(Integer id) throws Exception;
+
 }

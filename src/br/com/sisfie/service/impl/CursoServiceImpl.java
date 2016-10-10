@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.arquitetura.DAO.UniversalDAO;
 import br.com.sisfie.DAO.CursoDAO;
+import br.com.sisfie.entidade.Candidato;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.EmailCursoPrivado;
 import br.com.sisfie.entidade.InscricaoCurso;
@@ -83,4 +84,14 @@ public class CursoServiceImpl implements CursoService {
 		
 		return cursoDAO.carregaInscricaoCursoCertPorIdInscricao(idInscricaoCurso);
 	}
+
+	
+
+	@Override
+	public Curso carregaCursoById(Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		return (Curso) dao.get(Curso.class, id);
+	}
+
+	
 }

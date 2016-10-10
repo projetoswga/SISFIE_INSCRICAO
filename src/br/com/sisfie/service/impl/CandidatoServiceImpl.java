@@ -145,4 +145,10 @@ public class CandidatoServiceImpl implements CandidatoService {
 	public Integer recuperarParceiro(String email) {
 		return candidatoDAO.recuperarParceiro(email);
 	}
+
+	@Override
+	public Candidato get(Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		return (Candidato) dao.get(Candidato.class, id);
+	}
 }
