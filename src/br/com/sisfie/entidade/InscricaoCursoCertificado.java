@@ -27,7 +27,7 @@ public class InscricaoCursoCertificado extends Entidade<Integer> {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "inscricao_curso_certificado_id_insc_curso_certificado_seq")
 	private Integer id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_modelo_documento")
 	private ModeloDocumento modeloDocumento;
 

@@ -104,9 +104,9 @@ public class LoadImagemBD extends HttpServlet {
 					.carregaInscricaoCursoCertPorIdInscricao(Integer.parseInt(idInscricaoCurso));
 			Candidato candidato = candidatoService.get(Integer.parseInt(idCandidato));
 			Curso curso = cursoService.carregaCursoById(Integer.parseInt(idCurso));
-//			String templatePath  = icc.getModeloDocumento().getUrl();
+			String templatePath  = icc.getModeloDocumento().getUrl();
 			//TODO apagar a linha e descomentar a anterior para gerar versão ***
-			String templatePath  = "/Users/carlos/Downloads/teste.docx";
+//			String templatePath  = "/Users/carlos/Downloads/teste.docx";
 			SimpleDateFormat sdfFormatted = new SimpleDateFormat("dd/MM/YYYY");
 			SimpleDateFormat sdfSimply = new SimpleDateFormat("ddMMYYYY");
 			Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
