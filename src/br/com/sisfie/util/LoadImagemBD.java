@@ -112,9 +112,11 @@ public class LoadImagemBD extends HttpServlet {
 			Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
 			nonImageVariableMap.put("DATAFINAL", sdfFormatted.format(Calendar.getInstance().getTime()));
 			nonImageVariableMap.put("nome", candidato.getNome());
-			nonImageVariableMap.put("website", candidato.getNome());
+			nonImageVariableMap.put("NOME", candidato.getNome());
+			nonImageVariableMap.put("Diretor", icc.getDiretor());
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", icc.getConteudoProgramaticoParticipante());
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", icc.getConteudoProgramaticoDocente());
 			nonImageVariableMap.put("CURSO", curso.getTitulo());
-			nonImageVariableMap.put("author_name", "segundo");
 			nonImageVariableMap.put("CARGA", curso.getCargaHoraria() !=null ? curso.getCargaHoraria().toString() : "S/N" );
 			nonImageVariableMap.put("processo", "2015.333.11");
 			
