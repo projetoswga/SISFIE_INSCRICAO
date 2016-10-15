@@ -118,7 +118,7 @@ public class LoadImagemBD extends HttpServlet {
 			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", icc.getConteudoProgramaticoDocente());
 			nonImageVariableMap.put("CURSO", curso.getTitulo());
 			nonImageVariableMap.put("CARGA", curso.getCargaHoraria() !=null ? curso.getCargaHoraria().toString() : "S/N" );
-			nonImageVariableMap.put("processo", "2015.333.11");
+			
 			
 			Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
 			Object pathHeaderLogo = InscricaoCursoBean.class.getResource("../../resources/design/imagem/cabecalho.jpg");
