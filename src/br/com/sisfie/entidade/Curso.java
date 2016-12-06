@@ -62,9 +62,7 @@ public class Curso extends Entidade<Integer> {
 	@JoinColumn(name = "id_opcao_lista_cand", nullable = false)
 	private OpcaoListaCandidato opcaoListaCandidato;
 
-	@Column(name = "titulo", nullable = false)
-	private String titulo;
-
+	
 	@Column(name = "cod_curso", nullable = false)
 	private String codigo;
 
@@ -79,6 +77,13 @@ public class Curso extends Entidade<Integer> {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dt_inicio_inscricao", nullable = false, length = 13)
 	private Date dtInicioInscricao;
+	@Column(name = "titulo", nullable = false)
+	private String titulo;
+	@Column(name = "conteudo_programatico", nullable = true)
+	private String conteudoProgramatico;
+	
+	@Column(name = "diretor", nullable = true)
+	private String diretor;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dt_termino_inscricao", length = 13)
@@ -565,4 +570,21 @@ public class Curso extends Entidade<Integer> {
 	public void setInstrutor(boolean isInstrutor) {
 		this.isInstrutor = isInstrutor;
 	}
+
+	public String getConteudoProgramatico() {
+		return conteudoProgramatico;
+	}
+
+	public void setConteudoProgramatico(String conteudoProgramatico) {
+		this.conteudoProgramatico = conteudoProgramatico;
+	}
+
+	public String getDiretor() {
+		return diretor;
+	}
+
+	public void setDiretor(String diretor) {
+		this.diretor = diretor;
+	}
+	
 }

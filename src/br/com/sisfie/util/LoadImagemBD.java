@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +26,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import br.com.arquitetura.excecao.ExcecaoUtil;
+import br.com.arquitetura.util.DateUtil;
 import br.com.sisfie.bean.InscricaoCursoBean;
 import br.com.sisfie.entidade.Candidato;
 import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.InscricaoComprovante;
 import br.com.sisfie.entidade.InscricaoCursoCertificado;
 import br.com.sisfie.entidade.InscricaoDocumento;
+import br.com.sisfie.entidade.ModeloDocumento;
 import br.com.sisfie.service.CandidatoService;
 import br.com.sisfie.service.CursoService;
 import br.com.sisfie.service.ImagemService;
@@ -58,6 +61,7 @@ public class LoadImagemBD extends HttpServlet {
 	private static final String COMPROVANTE = "comprovante";
 	private static final String FREQUENCIA = "frequencia";
 	public static final String CERTIFICADO = "certificado";
+	public static final String CERTIFICADO_TESTE = "certificado_teste";
 
 	public void init(ServletConfig config) throws ServletException {
 		SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
@@ -83,6 +87,8 @@ public class LoadImagemBD extends HttpServlet {
 					processRequestFrequencia(request, response);
 				} else if (tipo.equals(CERTIFICADO)) {
 					processRequestCertificado(request, response);
+				}else if (tipo.equals(CERTIFICADO_TESTE)) {
+					processRequestCertificadoTeste(request, response);
 				}
 			} else {
 				throw new Exception("Parâmetro não encontrado");
@@ -91,7 +97,52 @@ public class LoadImagemBD extends HttpServlet {
 			ExcecaoUtil.tratarExcecao(e);
 		}
 	}
+	private void processRequestCertificadoTeste(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			
+			
+			String id = (String) request.getParameter("id");
+			
+			ModeloDocumento m = cursoService.carregaModeloCurso(new Integer(id));
+			
+			
+			String templatePath  = m.getUrl();
+			//TODO apagar a linha e descomentar a anterior para gerar versão ***
+//			String templatePath  = "/Users/carlos/Downloads/teste.docx";
+			SimpleDateFormat sdfFormatted = new SimpleDateFormat("dd/MM/YYYY");
+			Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
+			nonImageVariableMap.put("DATAFINAL", sdfFormatted.format(Calendar.getInstance().getTime()));
+			nonImageVariableMap.put("DATAINICIAL", sdfFormatted.format(Calendar.getInstance().getTime()));
+			nonImageVariableMap.put("nome", "Maria José Silva");
+			nonImageVariableMap.put("NOME", "Maria José Silva");
+			nonImageVariableMap.put("DIRETOR", "José Maria Silva");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", "Matemática;");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", "Matemática Financeira");
+			nonImageVariableMap.put("CURSO", "SIAFI - Gerencial Teste");
+			nonImageVariableMap.put("VALIDAINSCRICAO","001010101");
+			nonImageVariableMap.put("DATAINICIALEXTENSO",DateUtil.formataData(new Date()));
+			nonImageVariableMap.put("DATAFINALEXTENSO",DateUtil.formataData(new Date()));
+			nonImageVariableMap.put("CARGA", "30H" );
+			
+			
+			Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
+			Object pathHeaderLogo = InscricaoCursoBean.class.getResource("../../resources/design/imagem/cabecalho.jpg");
+			if (null != pathHeaderLogo) {
+				imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
+			}
 
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
+					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
+
+			response.getOutputStream().write(mergedOutput);
+
+			enviarImagem(request, response, templatePath,
+					m.getNome());
+		} catch (Exception e) {
+			ExcecaoUtil.tratarExcecao(e);
+		}
+	}
+	
 	
 	
 	
@@ -108,16 +159,20 @@ public class LoadImagemBD extends HttpServlet {
 			//TODO apagar a linha e descomentar a anterior para gerar versão ***
 //			String templatePath  = "/Users/carlos/Downloads/teste.docx";
 			SimpleDateFormat sdfFormatted = new SimpleDateFormat("dd/MM/YYYY");
-			SimpleDateFormat sdfSimply = new SimpleDateFormat("ddMMYYYY");
 			Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
-			nonImageVariableMap.put("DATAFINAL", sdfFormatted.format(Calendar.getInstance().getTime()));
+			nonImageVariableMap.put("DATAFINAL", sdfFormatted.format(curso.getDtRealizacaoFim()));
+			nonImageVariableMap.put("DATAINICIAL", sdfFormatted.format(curso.getDtRealizacaoInicio()));
 			nonImageVariableMap.put("nome", candidato.getNome());
 			nonImageVariableMap.put("NOME", candidato.getNome());
-			nonImageVariableMap.put("Diretor", icc.getDiretor());
-			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", icc.getConteudoProgramaticoParticipante());
-			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", icc.getConteudoProgramaticoDocente());
+			nonImageVariableMap.put("DIRETOR", curso.getDiretor()!=null?curso.getDiretor():"S/N");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", curso.getConteudoProgramatico()!=null ?curso.getConteudoProgramatico():"S/N");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", curso.getConteudoProgramatico()!=null ?curso.getConteudoProgramatico():"S/N");
 			nonImageVariableMap.put("CURSO", curso.getTitulo());
+			nonImageVariableMap.put("VALIDAINSCRICAO",icc.getInscricaoCurso().getNumeroInscricao());
+			nonImageVariableMap.put("DATAINICIALEXTENSO",DateUtil.formataData(curso.getDtRealizacaoInicio()));
+			nonImageVariableMap.put("DATAFINALEXTENSO",DateUtil.formataData(curso.getDtRealizacaoFim()));
 			nonImageVariableMap.put("CARGA", curso.getCargaHoraria() !=null ? curso.getCargaHoraria().toString() : "S/N" );
+			nonImageVariableMap.put("NUMLIVRO", icc.getCodigoLivro() !=null ? curso.getCargaHoraria().toString() + "/"+icc.getAno() : "S/N" );
 			
 			
 			Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
@@ -139,61 +194,7 @@ public class LoadImagemBD extends HttpServlet {
 	}
 	
 	
-//	ModeloDocumento m = icc.getModeloDocumento();
-//	if(m!=null){
-//		String templatePath  = m.getUrl();
-//		SimpleDateFormat sdfFormatted = new SimpleDateFormat("dd/MM/YYYY");
-//		SimpleDateFormat sdfSimply = new SimpleDateFormat("ddMMYYYY");
-//		Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
-//		nonImageVariableMap.put("thank_you_date", sdfFormatted.format(Calendar.getInstance().getTime()));
-//		nonImageVariableMap.put("name", icc.getInscricaoCurso().getCandidato().getNome());
-//		nonImageVariableMap.put("website", icc.getInscricaoCurso().getCurso().getTitulo());
-//		nonImageVariableMap.put("author_name", icc.getInscricaoCurso().getNumeroInscricao());
-//		nonImageVariableMap.put("nanico_name", "Tenente Ribeiro");
-//		nonImageVariableMap.put("processo", "2015.333.11");
-//		
-//		Map<String, String> imageVariablesWithPathMap = new HashMap<String, String>();
-//		Object pathHeaderLogo = InscricaoCursoBean.class.getResource("../../resources/design/imagem/cabecalho.jpg");
-//		if (null != pathHeaderLogo) {
-//			imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
-//		}
-// 
-//		//BasicConfigurator.configure(new NullAppender()); //Necessário para evitar "java.util.NoSuchElementException ... at org.docx4j.utils.Log4jConfigurator.configure(Log4jConfigurator.java:42) [docx4j-2.8.1.jar:]"
-//		
-//		DocxDocumentMergerAndConverter docxDocumentMergerAndConverter = new DocxDocumentMergerAndConverter();
-//		byte[] mergedOutput = docxDocumentMergerAndConverter.mergeAndGeneratePDFOutput(templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, imageVariablesWithPathMap);
-//		
-//		ServletOutputStream sos = null;
-//		FacesContext context = FacesContext.getCurrentInstance();
-//		try {
-//			
-//			HttpServletResponse res = (HttpServletResponse) context.getExternalContext().getResponse();
-//            res.setContentType("application/pdf");
-//            //Código abaixo gerar o relatório e disponibiliza diretamente na página 
-//            res.setHeader("Content-disposition", "inline;filename=arquivo.pdf");
-//            //Código abaixo gerar o relatório e disponibiliza para o cliente baixar ou salvar 
-//            sos = res.getOutputStream();
-//            sos.write(mergedOutput);
-//            System.out.println("Cerficado gerado a partir do template: " + templatePath);
-//            
-//            // TODO REMOVER TRECHO ABAIXO
-//            FileOutputStream fos = new FileOutputStream(new File("c:/temp/certificado123321.pdf"));
-//            fos.write(mergedOutput);
-//            fos.close();
-//		} finally {
-//			if (null != sos) {
-//				sos.flush();
-//				sos.close();
-//			}
-//            //FacesContext.getCurrentInstance().responseComplete();  //NOT WORK
-//    		context.renderResponse();
-//    		context.responseComplete();
-//		}
-//	}
-//}
-//} catch (Exception e) {
-//ExcecaoUtil.tratarExcecao(e);
-//}
+
 	
 	
 	

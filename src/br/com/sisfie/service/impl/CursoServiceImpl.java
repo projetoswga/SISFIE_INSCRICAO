@@ -15,6 +15,7 @@ import br.com.sisfie.entidade.Curso;
 import br.com.sisfie.entidade.EmailCursoPrivado;
 import br.com.sisfie.entidade.InscricaoCurso;
 import br.com.sisfie.entidade.InscricaoCursoCertificado;
+import br.com.sisfie.entidade.ModeloDocumento;
 import br.com.sisfie.entidade.StatusCurso;
 import br.com.sisfie.entidade.StatusInscricao;
 import br.com.sisfie.service.CursoService;
@@ -91,6 +92,12 @@ public class CursoServiceImpl implements CursoService {
 	public Curso carregaCursoById(Integer id) throws Exception {
 		// TODO Auto-generated method stub
 		return (Curso) dao.get(Curso.class, id);
+	}
+
+	@Override
+	public ModeloDocumento carregaModeloCurso(Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		return (ModeloDocumento) dao.get(ModeloDocumento.class, id);
 	}
 
 	

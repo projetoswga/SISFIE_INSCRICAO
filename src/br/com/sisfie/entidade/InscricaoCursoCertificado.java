@@ -48,13 +48,13 @@ public class InscricaoCursoCertificado extends Entidade<Integer> {
 	@Column(name = "codigo_livro")
 	private Integer codigoLivro;
 
-	@Column(name = "cont_programatico_docente", columnDefinition = "text")
-	private String conteudoProgramaticoDocente;
-
-	@Column(name = "cont_programatico_participante", columnDefinition = "text")
-	private String conteudoProgramaticoParticipante;
-	@Column(name = "diretor", columnDefinition = "text")
-	private String diretor;
+//	@Column(name = "cont_programatico_docente", columnDefinition = "text")
+//	private String conteudoProgramaticoDocente;
+//
+//	@Column(name = "cont_programatico_participante", columnDefinition = "text")
+//	private String conteudoProgramaticoParticipante;
+//	@Column(name = "diretor", columnDefinition = "text")
+//	private String diretor;
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "dt_publ_livro", length = 13)
@@ -117,21 +117,7 @@ public class InscricaoCursoCertificado extends Entidade<Integer> {
 		this.codigoLivro = codigoLivro;
 	}
 
-	public String getConteudoProgramaticoDocente() {
-		return conteudoProgramaticoDocente;
-	}
-
-	public void setConteudoProgramaticoDocente(String conteudoProgramaticoDocente) {
-		this.conteudoProgramaticoDocente = conteudoProgramaticoDocente;
-	}
-
-	public String getConteudoProgramaticoParticipante() {
-		return conteudoProgramaticoParticipante;
-	}
-
-	public void setConteudoProgramaticoParticipante(String conteudoProgramaticoParticipante) {
-		this.conteudoProgramaticoParticipante = conteudoProgramaticoParticipante;
-	}
+	
 
 	public Date getDataPublicacaoLivro() {
 		return dataPublicacaoLivro;
@@ -141,13 +127,7 @@ public class InscricaoCursoCertificado extends Entidade<Integer> {
 		this.dataPublicacaoLivro = dataPublicacaoLivro;
 	}
 
-	public String getDiretor() {
-		return diretor;
-	}
-
-	public void setDiretor(String diretor) {
-		this.diretor = diretor;
-	}
+	
 
 	public Integer getAno() {
 		return ano;
