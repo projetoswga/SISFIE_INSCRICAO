@@ -131,7 +131,7 @@ public class LoadImagemBD extends HttpServlet {
 				imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
 			}
 
-			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
 			response.getOutputStream().write(mergedOutput);
@@ -181,7 +181,7 @@ public class LoadImagemBD extends HttpServlet {
 				imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
 			}
 
-			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
 			response.getOutputStream().write(mergedOutput);
