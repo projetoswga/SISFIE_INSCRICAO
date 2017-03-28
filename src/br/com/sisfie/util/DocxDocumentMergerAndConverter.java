@@ -72,14 +72,17 @@ public class DocxDocumentMergerAndConverter {
 	 * @param context
 	 */
 	public void replaceImagesVariabalesInTemplate(IXDocReport report, Map<String, String> variablesToBeReplaced, IContext context){
- 
+			
+		if (null == variablesToBeReplaced)
+			return;
+		
 		 FieldsMetadata metadata = new FieldsMetadata();
          for(Map.Entry<String, String> variable: variablesToBeReplaced.entrySet()){
                  metadata.addFieldAsImage(variable.getKey());
                  context.put(variable.getKey(), new FileImageProvider(new File(variable.getValue()),true));
          }
          report.setFieldsMetadata(metadata);
- 
+		
 	}
 	/**
 	 * Generates byte array as output from merged template
