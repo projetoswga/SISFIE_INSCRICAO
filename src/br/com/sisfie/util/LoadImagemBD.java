@@ -296,8 +296,11 @@ public class LoadImagemBD extends HttpServlet {
 				// Init servlet response.
 				response.reset();
 				response.setBufferSize(DEFAULT_BUFFER_SIZE);
-				response.setContentType(contentType);
-				response.setHeader("Content-disposition", "inline; filename=\"" + imageFileName + "\"");
+				response.setContentType(contentType); //application/force-download
+				response.setContentLength((int)file.length());
+		        //response.setContentLength(-1);
+				response.setHeader("Content-Transfer-Encoding", "binary");
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
 				output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
 
 				// Write file contents to response.
