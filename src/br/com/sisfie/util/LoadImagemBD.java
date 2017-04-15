@@ -2,10 +2,14 @@ package br.com.sisfie.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -22,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import br.com.arquitetura.excecao.ExcecaoUtil;
@@ -39,7 +42,6 @@ import br.com.sisfie.service.CursoService;
 import br.com.sisfie.service.ImagemService;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
-@Component
 @WebServlet("/loadImagemBD")
 public class LoadImagemBD extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -91,7 +93,7 @@ public class LoadImagemBD extends HttpServlet {
 					processRequestCertificadoTeste(request, response);
 				}
 			} else {
-				throw new Exception("Par√¢metro n√£o encontrado");
+				throw new Exception("Par‚metro n„o encontrado");
 			}
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
@@ -113,11 +115,11 @@ public class LoadImagemBD extends HttpServlet {
 			Map<String, Object> nonImageVariableMap = new HashMap<String, Object>();
 			nonImageVariableMap.put("DATAFINAL", sdfFormatted.format(Calendar.getInstance().getTime()));
 			nonImageVariableMap.put("DATAINICIAL", sdfFormatted.format(Calendar.getInstance().getTime()));
-			nonImageVariableMap.put("nome", "Maria Jos√© Silva");
-			nonImageVariableMap.put("NOME", "Maria Jos√© Silva");
-			nonImageVariableMap.put("DIRETOR", "Jos√© Maria Silva");
-			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", "Matem√°tica;");
-			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", "Matem√°tica Financeira");
+			nonImageVariableMap.put("nome", "Maria JosÈ Silva");
+			nonImageVariableMap.put("NOME", "Maria JosÈ Silva");
+			nonImageVariableMap.put("DIRETOR", "JosÈ Maria Silva");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOP", "Matem·tica;");
+			nonImageVariableMap.put("CONTEUDOPROGRAMATICOD", "Matem·tica Financeira");
 			nonImageVariableMap.put("CURSO", "SIAFI - Gerencial Teste");
 			nonImageVariableMap.put("VALIDAINSCRICAO","001010101");
 			nonImageVariableMap.put("DATAINICIALEXTENSO",DateUtil.formataData(new Date()));
@@ -134,10 +136,9 @@ public class LoadImagemBD extends HttpServlet {
 			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
-			response.getOutputStream().write(mergedOutput);
+			//response.getOutputStream().write(mergedOutput);
 
-			enviarImagem(request, response, templatePath,
-					m.getNome());
+			enviarImagem(request, response, templatePath, m.getNomTipo(), mergedOutput);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
@@ -184,21 +185,14 @@ public class LoadImagemBD extends HttpServlet {
 			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
-			response.getOutputStream().write(mergedOutput);
+			//response.getOutputStream().write(mergedOutput);
 
 			enviarImagem(request, response, icc.getModeloDocumento().getUrl(),
-					icc.getModeloDocumento().getNomTipo());
+					icc.getModeloDocumento().getNomTipo(), mergedOutput);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
 	}
-	
-	
-
-	
-	
-	
-	
 	
 	private void processRequestFrequencia(HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -211,14 +205,14 @@ public class LoadImagemBD extends HttpServlet {
 				String paramId = request.getParameter("id");
 				ValidacaoUtil.somenteNumero(paramId);
 				if (paramId == null || paramId.isEmpty()) {
-					throw new Exception("Par√¢metro n√£o encontrado");
+					throw new Exception("Par‚metro n„o encontrado");
 				}
 				curso = imagemService.carregarCursoId(new Integer(paramId));
 			}
 			if (curso == null || curso.getUrlArquivoFrequencia() == null) {
-				throw new Exception("Par√¢metro n√£o encontrado");
+				throw new Exception("Par‚metro n„o encontrado");
 			}
-			enviarImagem(request, response, curso.getUrlArquivoFrequencia(), curso.getNomeArquivoFrequencia());
+			enviarImagem(request, response, curso.getUrlArquivoFrequencia(), curso.getNomeArquivoFrequencia(), null);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
@@ -235,14 +229,14 @@ public class LoadImagemBD extends HttpServlet {
 				String paramId = request.getParameter("id");
 				ValidacaoUtil.somenteNumero(paramId);
 				if (paramId == null || paramId.isEmpty()) {
-					throw new Exception("Par√¢metro n√£o encontrado");
+					throw new Exception("Par‚metro n„o encontrado");
 				}
 				inscricaoDocumento = imagemService.carregarDocumentoId(new Integer(paramId));
 			}
 			if (inscricaoDocumento == null || inscricaoDocumento.getUrlImagem() == null) {
-				throw new Exception("Par√¢metro n√£o encontrado");
+				throw new Exception("Par‚metro n„o encontrado");
 			}
-			enviarImagem(request, response, inscricaoDocumento.getUrlImagem(), inscricaoDocumento.getNomTipo());
+			enviarImagem(request, response, inscricaoDocumento.getUrlImagem(), inscricaoDocumento.getNomTipo(), null);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
@@ -259,20 +253,20 @@ public class LoadImagemBD extends HttpServlet {
 				String paramId = request.getParameter("id");
 				ValidacaoUtil.somenteNumero(paramId);
 				if (paramId == null || paramId.isEmpty()) {
-					throw new Exception("Par√¢metro n√£o encontrado");
+					throw new Exception("Par‚metro n„o encontrado");
 				}
 				inscricaoComprovante = imagemService.carregarImagemId(new Integer(paramId));
 			}
 			if (inscricaoComprovante == null || inscricaoComprovante.getUrlImagem() == null) {
-				throw new Exception("Par√¢metro n√£o encontrado");
+				throw new Exception("Par‚metro n„o encontrado");
 			}
-			enviarImagem(request, response, inscricaoComprovante.getUrlImagem(), inscricaoComprovante.getNomTipo());
+			enviarImagem(request, response, inscricaoComprovante.getUrlImagem(), inscricaoComprovante.getNomTipo(), null);
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
 		}
 	}
 
-	private void enviarImagem(HttpServletRequest request, HttpServletResponse response, String imageFileName, String contentType)
+	private void enviarImagem(HttpServletRequest request, HttpServletResponse response, String imageFileName, String contentType, byte[] content)
 			throws Exception {
 
 		if (imageFileName != null) {
@@ -282,25 +276,38 @@ public class LoadImagemBD extends HttpServlet {
 			imageFileName = URLDecoder.decode(imageFileName, "UTF-8");
 
 			// Get content type by filename.
-
 			File file = new File(imageFileName);
 
 			// Preparando os streams
-			BufferedInputStream input = null;
-			BufferedOutputStream output = null;
+			InputStream input = null;
+			OutputStream output = null;
 
 			try {
-				// Abrindo a imagem
-				input = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
-
 				// Init servlet response.
 				response.reset();
 				response.setBufferSize(DEFAULT_BUFFER_SIZE);
-				response.setContentType(contentType); //application/force-download
-				response.setContentLength((int)file.length());
+		        String mimeType = null;
+		        long fileSize = 0;
+				if (null == content) {
+					input = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
+					mimeType = request.getServletContext().getMimeType(imageFileName);
+					fileSize = file.length();
+				} else {
+					input = new ByteArrayInputStream(content);
+					mimeType = URLConnection.guessContentTypeFromStream(input);
+					fileSize = content.length;
+				}
+		        if (mimeType == null) {
+		            mimeType = contentType==null?"application/octet-stream":contentType;
+		        }
+		        System.out.println("MIME type: " + mimeType);
+		        
+		        response.setContentType(mimeType); //application/force-download
+				response.setContentLength((int)fileSize);
 		        //response.setContentLength(-1);
-				response.setHeader("Content-Transfer-Encoding", "binary");
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+				response.addHeader("Content-Transfer-Encoding", "binary");
+				response.addHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+
 				output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
 
 				// Write file contents to response.
@@ -312,22 +319,23 @@ public class LoadImagemBD extends HttpServlet {
 
 				// Finalizando
 				output.flush();
+				response.flushBuffer();
 			} catch (IOException e) {
 				throw new IOException();
 			} finally {
 				// Gently close streams.
-				close(output);
+				//close(output);
 				close(input);
 			}
 		}
 	}
 
-	private static void close(Closeable resource) throws IOException {
+	private static void close(Closeable resource) {
 		if (resource != null) {
 			try {
 				resource.close();
 			} catch (IOException e) {
-				throw new IOException();
+				e.printStackTrace();
 			}
 		}
 	}

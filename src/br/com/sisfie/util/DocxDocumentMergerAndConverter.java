@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
- 
+
 import org.docx4j.convert.out.pdf.PdfConversion;
 import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
- 
+
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import fr.opensagres.xdocreport.document.IXDocReport;
@@ -128,8 +128,16 @@ public class DocxDocumentMergerAndConverter {
  
         ByteArrayOutputStream pdfByteOutputStream = new ByteArrayOutputStream();
         WordprocessingMLPackage wordprocessingMLPackage=null;
- 
- 
+        
+        //baixar demais converters: https://code.google.com/archive/p/xdocreport/downloads
+        /**
+         * @TODO tentar fazer assim depois
+         */
+        /*
+        Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF);
+        IConverter converter = ConverterRegistry.getRegistry().findConverter(options);
+        converter.convert(new ByteArrayInputStream(docxBytes), pdfByteOutputStream, options);
+        */
         wordprocessingMLPackage = WordprocessingMLPackage.load(new ByteArrayInputStream(docxBytes));
         PdfSettings pdfSettings = new PdfSettings();
         PdfConversion docx4jViaXSLFOconverter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordprocessingMLPackage);

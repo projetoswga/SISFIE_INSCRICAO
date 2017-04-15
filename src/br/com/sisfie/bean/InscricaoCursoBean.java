@@ -293,10 +293,10 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					idHorario);
 
 			/**
-			 * Removendo da gradeOficinas as grades de oficinas vinculadas, ou seja, remove as oficinas que tem complemento em outro horário
-			 * para não conflitar com as que já estão selecionadas. (gradeOficicas ---> Oficinas disponíveis para seleção);
-			 * (listaGradeOficinasVinculadas ---> Continuação das oficinas selecionadas em outro horário); (listaGradeOficinas ---> Oficinas
-			 * já adicionadas); (gradeExclusao ---> Oficinas à serem removidas por conflitarem com outras oficinas já selecionadas).
+			 * Removendo da gradeOficinas as grades de oficinas vinculadas, ou seja, remove as oficinas que tem complemento em outro horÃ¡rio
+			 * para nÃ£o conflitar com as que jÃ¡ estÃ£o selecionadas. (gradeOficicas ---> Oficinas disponÃ­veis para seleÃ§Ã£o);
+			 * (listaGradeOficinasVinculadas ---> ContinuaÃ§Ã£o das oficinas selecionadas em outro horÃ¡rio); (listaGradeOficinas ---> Oficinas
+			 * jÃ¡ adicionadas); (gradeExclusao ---> Oficinas Ã  serem removidas por conflitarem com outras oficinas jÃ¡ selecionadas).
 			 */
 			listaGradeOficinasVinculadas = new ArrayList<GradeOficina>();
 			List<GradeOficina> gradeExclusao = new ArrayList<GradeOficina>();
@@ -338,11 +338,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	public void adicionarOficina() {
 		try {
 			if (idHorario == null || idHorario == 0) {
-				FacesMessagesUtil.addErrorMessage("Horário", "Campo obrigatório!");
+				FacesMessagesUtil.addErrorMessage("HorÃ¡rio", "Campo obrigatÃ³rio!");
 				return;
 			}
 			if (idGradeOficina == null || idGradeOficina == 0) {
-				FacesMessagesUtil.addErrorMessage("Oficina", "Campo obrigatório!");
+				FacesMessagesUtil.addErrorMessage("Oficina", "Campo obrigatÃ³rio!");
 				return;
 			}
 
@@ -356,7 +356,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 			isParceiro = false;
 
-			// Verificando se o candidato é parceiro
+			// Verificando se o candidato Ã© parceiro
 			EmailCursoPrivado emailParceiroConsulta = new EmailCursoPrivado();
 			emailParceiroConsulta.setEmail(loginBean.getModel().getEmailInstitucional());
 			emailParceiroConsulta.setCurso(new Curso(cursoSelecionado.getId()));
@@ -383,7 +383,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						idsParceiros);
 
 				if (countInscritos >= (gradeOficina.getSala().getNumCapacidade() - percentualParceiro)) {
-					FacesMessagesUtil.addErrorMessage("Inscrições Encerradas!", "Para a oficina selecionada não há mais vagas.");
+					FacesMessagesUtil.addErrorMessage("InscriÃ§Ãµes Encerradas!", "Para a oficina selecionada nÃ£o hÃ¡ mais vagas.");
 					return;
 				}
 			} else {
@@ -391,7 +391,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						idsParceiros);
 
 				if (countParceirosInscritos >= percentualParceiro) {
-					FacesMessagesUtil.addErrorMessage("Inscrições Encerradas!", "Para a oficina selecionada não há mais vagas.");
+					FacesMessagesUtil.addErrorMessage("InscriÃ§Ãµes Encerradas!", "Para a oficina selecionada nÃ£o hÃ¡ mais vagas.");
 					return;
 				}
 			}
@@ -406,9 +406,9 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 			if (!exite) {
 				/**
-				 * Caso a grade seja maior do que 4 horas, significa que a mesma oficina será dada em outro horário. É necessário adicionar
-				 * essas oficinas tbm, com isso será mostrado um popup para exigir e pedir a confirmação do usuário, do contrário salva sem
-				 * essa confirmação.
+				 * Caso a grade seja maior do que 4 horas, significa que a mesma oficina serÃ¡ dada em outro horÃ¡rio. Ã‰ necessÃ¡rio adicionar
+				 * essas oficinas tbm, com isso serÃ¡ mostrado um popup para exigir e pedir a confirmaÃ§Ã£o do usuÃ¡rio, do contrÃ¡rio salva sem
+				 * essa confirmaÃ§Ã£o.
 				 */
 				if (gradeOficina.getOficina().getNumCargaHoraria() > 4) {
 					RequestContext context = RequestContext.getCurrentInstance();
@@ -417,7 +417,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					confirmarSelecaoOficina();
 				}
 			} else {
-				FacesMessagesUtil.addErrorMessage("", "Oficina já adicionada!");
+				FacesMessagesUtil.addErrorMessage("", "Oficina jÃ¡ adicionada!");
 				return;
 			}
 		} catch (Exception e) {
@@ -519,7 +519,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		Boolean save = (Boolean) getSessionMap().remove("saveIscricao");
 		if (save != null && save) {
 			abaId = 1;
-			FacesMessagesUtil.addInfoMessage("Inscrição ", "Realizada com sucesso!");
+			FacesMessagesUtil.addInfoMessage("InscriÃ§Ã£o ", "Realizada com sucesso!");
 		}
 		Boolean saveDados = (Boolean) getSessionMap().remove("saveDados");
 		if (saveDados != null && saveDados) {
@@ -578,7 +578,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					for (Curso item : cursosPesq) {
 						
 						/**
-						 * Verifica se o curso é privado e o candidato tem acesso
+						 * Verifica se o curso Ã© privado e o candidato tem acesso
 						 */
 						if (item.getPrivado()) {
 							if (!temAcessoCursoPrivado(item)) {
@@ -587,7 +587,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						}
 						
 						/**
-						 * Verifica se o candidato é instrutor.
+						 * Verifica se o candidato Ã© instrutor.
 						 */
 						item.setInstrutor(false);
 						if (!item.getEmailsCursoPrivado().isEmpty() && !item.getFlgPossuiOficina()) {
@@ -595,7 +595,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						}
 
 						/**
-						 * Se não for instrutor, verifica se o curso é por órgão. Caso seja, o participante deve ser de algum órgao que
+						 * Se nÃ£o for instrutor, verifica se o curso Ã© por Ã³rgÃ£o. Caso seja, o participante deve ser de algum Ã³rgao que
 						 * esteja participando do evento para se inscriver.
 						 */
 						if (!item.isInstrutor() && item.getOrgaoCursos() != null && !item.getOrgaoCursos().isEmpty()) {
@@ -613,7 +613,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 						}
 
 						/**
-						 * Verifiva se o candidato é parceiro, caso ele não seja, é necessário verificar se ele é da mesma região do curso
+						 * Verifiva se o candidato Ã© parceiro, caso ele nÃ£o seja, Ã© necessÃ¡rio verificar se ele Ã© da mesma regiÃ£o do curso
 						 */
 						if (item.getFlgPossuiOficina()) {
 							EmailCursoPrivado emailParceiroConsulta = new EmailCursoPrivado();
@@ -635,8 +635,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					}
 
 					/**
-					 * Lista de cursos para inscrições de parceiros fora do periodo de inscrição. Requisito do anexo C. O periodo dessa
-					 * 'inscrição' compreende da data fim convencional de inscrição até 15 dias antes do início do curso. TODO: Rever isso
+					 * Lista de cursos para inscriÃ§Ãµes de parceiros fora do periodo de inscriÃ§Ã£o. Requisito do anexo C. O periodo dessa
+					 * 'inscriÃ§Ã£o' compreende da data fim convencional de inscriÃ§Ã£o atÃ© 15 dias antes do inÃ­cio do curso. TODO: Rever isso
 					 * com a esaf.
 					 */
 					List<EmailCursoPrivado> listaParceirosOuInstrutoresForaPrazoInscricao = cursoService
@@ -654,7 +654,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 							} else if (emailParceiroOuInstrutor.getTipo().equals(TipoEmail.INSTRUTOR.getTipo())) {
 								emailParceiroOuInstrutor.getCurso().setInstrutor(true);
 								if (mapaInstrutorCurso == null){
-									mapaInstrutorCurso = new HashMap<>();
+									mapaInstrutorCurso = new HashMap<Curso, Boolean>();
 								}
 								mapaInstrutorCurso.put(emailParceiroOuInstrutor.getCurso(), emailParceiroOuInstrutor.getCurso().isInstrutor());
 								adicionarCurso(emailParceiroOuInstrutor);
@@ -743,7 +743,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	public void mapearInstrutorCurso(Curso curso) throws Exception {
 		if (mapaInstrutorCurso == null) {
-			mapaInstrutorCurso = new HashMap<>();
+			mapaInstrutorCurso = new HashMap<Curso, Boolean>();
 		}
 		for (EmailCursoPrivado email : curso.getEmailsCursoPrivado()) {
 			if (email.getEmail().trim().toLowerCase().equals(loginBean.getModel().getEmailInstitucional().trim().toLowerCase())) {
@@ -832,7 +832,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			List<Integer> idsAtuacoes = new ArrayList<Integer>();
 			principal: for (int i = 0; i < areaAtuacoes.length; i++) {
 				areaAtuacoesAdicionados.add(areaAtuacoes[i]);
-				// Caso tenha registro na lista mas não na base
+				// Caso tenha registro na lista mas nÃ£o na base
 				boolean existe = false;
 				if (atuacaoCandidatos != null && !atuacaoCandidatos.isEmpty()) {
 					for (AtuacaoCandidato atuacaoCandidato : atuacaoCandidatos) {
@@ -856,13 +856,13 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					atuacaoCandidatos.add(atuacaoCand);
 				}
 			}
-			// Controle das lista com registro adicionados e não adicionados
+			// Controle das lista com registro adicionados e nÃ£o adicionados
 			for (Atuacao atuacao : areaAtuacoesAdicionados) {
 				idsAtuacoes.add(atuacao.getId());
 			}
 			listarAreaAtuacoes(idsAtuacoes);
 		} else {
-			FacesMessagesUtil.addErrorMessage(" ", "Selecione pelo menos uma Área de atuação!");
+			FacesMessagesUtil.addErrorMessage(" ", "Selecione pelo menos uma Ã�rea de atuaÃ§Ã£o!");
 		}
 	}
 
@@ -911,7 +911,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			List<Integer> idsCargos = new ArrayList<Integer>();
 			principal: for (int i = 0; i < cargos.length; i++) {
 				cargosAdicionados.add(cargos[i]);
-				// Caso tenha registro na lista mas não na base
+				// Caso tenha registro na lista mas nÃ£o na base
 				boolean existe = false;
 				if (candidatoCargos != null && !candidatoCargos.isEmpty()) {
 					for (CandidatoCargo candidatoCargo : candidatoCargos) {
@@ -935,7 +935,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					candidatoCargos.add(candidatoCargo);
 				}
 			}
-			// Controle das lista com registro adicionados e não adicionados
+			// Controle das lista com registro adicionados e nÃ£o adicionados
 			for (Cargo cargo : cargosAdicionados) {
 				idsCargos.add(cargo.getId());
 			}
@@ -948,7 +948,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	public void deleteComprovante() {
 		try {
 			comprovantes.remove(comprovanteExcluir);
-			FacesMessagesUtil.addInfoMessage("Comprovante ", " excluído com sucesso!");
+			FacesMessagesUtil.addInfoMessage("Comprovante ", " excluÃ­do com sucesso!");
 
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
@@ -958,7 +958,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	public void deleteDocumento() {
 		try {
 			documentos.remove(documentoExcluir);
-			FacesMessagesUtil.addInfoMessage("Documento ", " excluído com sucesso!");
+			FacesMessagesUtil.addInfoMessage("Documento ", " excluÃ­do com sucesso!");
 
 		} catch (Exception e) {
 			ExcecaoUtil.tratarExcecao(e);
@@ -1015,7 +1015,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			if (ic.getStatusUltimo() != null && ic.getStatusUltimo().getId().equals(Status.CANCELADO)) {
 				continue;
 			} else {
-				FacesMessagesUtil.addErrorMessage("Inscrição ", " para esse curso, já foi realizada!");
+				FacesMessagesUtil.addErrorMessage("InscriÃ§Ã£o ", " para esse curso, jÃ¡ foi realizada!");
 				return Boolean.FALSE;
 			}
 
@@ -1040,7 +1040,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 		// Lista de espera por Regiao.
 		// Possui Vagas
-		// Candidato Mesma Região do Curso
+		// Candidato Mesma RegiÃ£o do Curso
 		boolean homologacaoConfirmacaoChefe = false;
 		boolean semHomologacao = false;
 		boolean candidatoMesmaRegiao = false;
@@ -1052,8 +1052,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		Situacao situacao = null;
 		Status status = null;
 
-		// verifica se qual a homologação.
-		// Qualquer tipo de homologação que precise de comprovante entra
+		// verifica se qual a homologaÃ§Ã£o.
+		// Qualquer tipo de homologaÃ§Ã£o que precise de comprovante entra
 		// aki.
 		if (curso.getHomologacaoCursos() == null || curso.getHomologacaoCursos().isEmpty()) {
 			semHomologacao = true;
@@ -1081,7 +1081,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		if (curso.getFlgPossuiOficina()) {
 			temVagas = true;
 		} else {
-			// verifica se exite candidato cancelados. Caso exita, é somando a quantidade de inscritos para no caso de haver lista de espera
+			// verifica se exite candidato cancelados. Caso exita, Ã© somando a quantidade de inscritos para no caso de haver lista de espera
 			// o
 			// candidato que se inscreveu primeiro ter a prioridade. referente ao issue-43
 			Integer quantidadeInscritosCancelados = cursoService.countInscritosCancelados(curso.getId());
@@ -1092,7 +1092,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			}
 		}
 
-		// Faz as combinações para ver qual a situação e status do curso
+		// Faz as combinaÃ§Ãµes para ver qual a situaÃ§Ã£o e status do curso
 		if (isParceiro || isInstrutor) {
 			status = new Status(Status.PRESENCA_CONFIRMADA);
 			situacao = new Situacao(Situacao.INSCRITO);
@@ -1148,7 +1148,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				}
 			} else if (listaEsperaNaoPossui) {
 				if (!temVagas && !curso.getFlgPossuiOficina()) {
-					FacesMessagesUtil.addErrorMessage(" ", " Não Existe vaga para o curso.");
+					FacesMessagesUtil.addErrorMessage(" ", " NÃ£o Existe vaga para o curso.");
 					return Boolean.FALSE;
 				} else {
 					if (homologacaoConfirmacaoChefe) {
@@ -1180,12 +1180,12 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	}
 
 	/**
-	 * Método responsável por verificar se o candidato é da mesma região. Primeiro verifica os municípios e caso não os tenham, verifica-se
+	 * MÃ©todo responsÃ¡vel por verificar se o candidato Ã© da mesma regiÃ£o. Primeiro verifica os municÃ­pios e caso nÃ£o os tenham, verifica-se
 	 * as UFs
 	 * 
 	 * @param curso
 	 * @param candidato
-	 * @return TRUE se o candidato for da mesma região e FALSE o contrário
+	 * @return TRUE se o candidato for da mesma regiÃ£o e FALSE o contrÃ¡rio
 	 */
 	private boolean candidatoMesmaRegiaoCurso(Curso curso, Candidato candidato) {
 		if (curso.getMunicipioCursos() != null && !curso.getMunicipioCursos().isEmpty()) {
@@ -1223,7 +1223,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				comprovante.setUrlImagem(Constantes.PATH_IMG_LINUX + fileName);
 			}
 
-			// Força a criação do arquivo no file system
+			// ForÃ§a a criaÃ§Ã£o do arquivo no file system
 			FileOutputStream fos = new FileOutputStream(new File(comprovante.getUrlImagem()));
 			fos.write(event.getFile().getContents());
 			fos.close();
@@ -1255,7 +1255,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				documento.setUrlImagem(Constantes.PATH_IMG_LINUX + fileName);
 			}
 
-			// Força a criação do arquivo no file system
+			// ForÃ§a a criaÃ§Ã£o do arquivo no file system
 			FileOutputStream fos = new FileOutputStream(new File(documento.getUrlImagem()));
 			fos.write(event.getFile().getContents());
 			fos.close();
@@ -1279,7 +1279,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				}
 			}
 
-			// se a validação for para os documentos
+			// se a validaÃ§Ã£o for para os documentos
 			boolean documentoValido = false;
 			if (!comprovanteValido && inscricaoCursoSelecionado.getCurso().getFlgExigeDocumentacao()) {
 				for (InscricaoDocumento documento : documentos) {
@@ -1291,25 +1291,25 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			}
 
 			if (!comprovanteValido && !documentoValido) {
-				FacesMessagesUtil.addErrorMessage(" ", " É necessário adicionar um comprovante e/ou documento.");
+				FacesMessagesUtil.addErrorMessage(" ", " Ã‰ necessÃ¡rio adicionar um comprovante e/ou documento.");
 				return "";
 			}
 
-			// Valida informação pagamento
+			// Valida informaÃ§Ã£o pagamento
 			if (comprovanteValido && mostrarInformacaoPagamento) {
 				if (inscricaoInfoComplementar.getOrgao() == null || inscricaoInfoComplementar.getOrgao().getId() == null
 						|| inscricaoInfoComplementar.getOrgao().getId() == 0) {
-					FacesMessagesUtil.addErrorMessage("Órgão ", Constantes.CAMPO_OBRIGATORIO);
+					FacesMessagesUtil.addErrorMessage("Ã“rgÃ£o ", Constantes.CAMPO_OBRIGATORIO);
 					return "";
 				}
 				if (inscricaoInfoComplementar.getNumeroEmpenho() == null
 						|| inscricaoInfoComplementar.getNumeroEmpenho().isEmpty()) {
-					FacesMessagesUtil.addErrorMessage("Número Empenho ", Constantes.CAMPO_OBRIGATORIO);
+					FacesMessagesUtil.addErrorMessage("NÃºmero Empenho ", Constantes.CAMPO_OBRIGATORIO);
 					return "";
 				}
 				if (inscricaoInfoComplementar.getEnderecoOrgaoComplemento() == null
 						|| inscricaoInfoComplementar.getEnderecoOrgaoComplemento().isEmpty()) {
-					FacesMessagesUtil.addErrorMessage("Endereço Órgão ", Constantes.CAMPO_OBRIGATORIO);
+					FacesMessagesUtil.addErrorMessage("EndereÃ§o Ã“rgÃ£o ", Constantes.CAMPO_OBRIGATORIO);
 					return "";
 				}
 				if (inscricaoInfoComplementar.getCnpj() == null || inscricaoInfoComplementar.getCnpj().isEmpty()) {
@@ -1319,7 +1319,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				String cnpj = inscricaoInfoComplementar.getCnpj().trim().replaceAll("[/()-.]", "");
 				// Validar cnpj
 				if (!CnpjUtil.isValidCNPJ(cnpj)) {
-					FacesMessagesUtil.addErrorMessage("CNPJ ", "Inválido");
+					FacesMessagesUtil.addErrorMessage("CNPJ ", "InvÃ¡lido");
 					return "";
 				}
 				// retirar mascaras
@@ -1362,7 +1362,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			inscricaoCursoSelecionado = null;
 			FacesMessagesUtil.addInfoMessage(" ", "Cancelamento realizado com sucesso!");
 		} catch (Exception e) {
-			FacesMessagesUtil.addErrorMessage(" ", "Erro ao cancelar Inscrição!");
+			FacesMessagesUtil.addErrorMessage(" ", "Erro ao cancelar InscriÃ§Ã£o!");
 			ExcecaoUtil.tratarExcecao(e);
 		}
 		return SUCCESS;
@@ -1373,9 +1373,9 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			inscricaoCursoService.confirmarPresenca(inscricaoCursoSelecionado);
 			verificarBotaoConfirmar();
 			inscricaoCursoSelecionado = null;
-			FacesMessagesUtil.addInfoMessage("Confirmação ", " Realizado com sucesso!");
+			FacesMessagesUtil.addInfoMessage("ConfirmaÃ§Ã£o ", " Realizado com sucesso!");
 		} catch (Exception e) {
-			FacesMessagesUtil.addErrorMessage(" ", "Erro ao Confirmar Presença!");
+			FacesMessagesUtil.addErrorMessage(" ", "Erro ao Confirmar PresenÃ§a!");
 			ExcecaoUtil.tratarExcecao(e);
 		}
 		return SUCCESS;
@@ -1440,8 +1440,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 			if (cursoSelecionado.getFlgExigeDocumentacao() && !isInstrutor) {
 				if (documentos == null || documentos.isEmpty()) {
-					FacesMessagesUtil.addErrorMessage("Documentação ",
-							"O curso exige documentos comprobatórios conforme descrito no edital.");
+					FacesMessagesUtil.addErrorMessage("DocumentaÃ§Ã£o ",
+							"O curso exige documentos comprobatÃ³rios conforme descrito no edital.");
 					return "";
 				}
 			}
@@ -1453,7 +1453,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				return "";
 			}
 
-			// se tiver valido preenche situação e status do model
+			// se tiver valido preenche situaÃ§Ã£o e status do model
 			quantidadeInscrito = inscricaoCursoService.retornarQuantidadeInscritos(idCursoSelecionado);
 			if (!validarSituacaoStatus()) {
 				return "";
@@ -1461,7 +1461,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 			adicionarEsferasGovernos();
 
-			// Adiciona o email do chefe. Caso tenha sido escolhido essa opção no cadastro do curso.
+			// Adiciona o email do chefe. Caso tenha sido escolhido essa opÃ§Ã£o no cadastro do curso.
 			Candidato candidato = null;
 			if (emailResponsavel != null && !emailResponsavel.isEmpty()) {
 				// Seta o email do chefe e clona o registro
@@ -1470,7 +1470,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				candidato = (Candidato) candidatoAux.clone();
 			}
 
-			// Se candidatoComplemento não tiver candidato setado, que tiver que não tinha dados Obrigatorio a ser populado. Sendo assim
+			// Se candidatoComplemento nÃ£o tiver candidato setado, que tiver que nÃ£o tinha dados Obrigatorio a ser populado. Sendo assim
 			// seto null no objeto.
 			if (candidatoComplemento == null || candidatoComplemento.getCandidato() == null
 					|| candidatoComplemento.getCandidato().getId() == null) {
@@ -1500,8 +1500,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 					inscricaoCursoService.realizarInscricaoCurso(getModel(), candidato, candidatoComplemento, statusCurso,
 							listaGradeOficinas, documentos);
 				} else {
-					FacesMessagesUtil.addErrorMessage("Inscrição não Realizada!",
-							"Para realizar a inscrição é necessário ter o total da carga horária = "
+					FacesMessagesUtil.addErrorMessage("InscriÃ§Ã£o nÃ£o Realizada!",
+							"Para realizar a inscriÃ§Ã£o Ã© necessÃ¡rio ter o total da carga horÃ¡ria = "
 									+ cursoSelecionado.getCargaHoraria());
 					return "";
 				}
@@ -1523,11 +1523,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		Candidato candidato = (Candidato) universalManager.get(Candidato.class, loginBean.getModel().getId());
 		if (mostrarEmailResponsavel) {
 			if (!emailResponsavel.contains("@") || !emailResponsavel.contains(".")) {
-				FacesMessagesUtil.addErrorMessage("Email Responsável", "Inválida");
+				FacesMessagesUtil.addErrorMessage("Email ResponsÃ¡vel", "InvÃ¡lida");
 				return false;
 			}
 			if (!emailResponsavel.trim().equals(emailResponsavelConfirmacao)) {
-				FacesMessagesUtil.addErrorMessage("Confirmação do Email do Responsável ", " Não Confere");
+				FacesMessagesUtil.addErrorMessage("ConfirmaÃ§Ã£o do Email do ResponsÃ¡vel ", " NÃ£o Confere");
 				return false;
 			}
 		}
@@ -1536,11 +1536,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		if (mostrarDadosBancario) {
 			candidatoComplemento.setCandidato(new Candidato(candidato.getId()));
 			if (candidatoComplemento.getBanco() == null || candidatoComplemento.getBanco().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Número Banco ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("NÃºmero Banco ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 			if (candidatoComplemento.getAgencia() == null || candidatoComplemento.getAgencia().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Agência ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("AgÃªncia ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 			if (candidatoComplemento.getContaCorrente() == null || candidatoComplemento.getContaCorrente().trim().isEmpty()) {
@@ -1552,15 +1552,15 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 		if (mostrarNivelEnsino) {
 			candidatoComplemento.setCandidato(new Candidato(candidato.getId()));
 			if (candidatoComplemento.getNomeInstituicao() == null || candidatoComplemento.getNomeInstituicao().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Nome da Instituição ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("Nome da InstituiÃ§Ã£o ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 			if (candidatoComplemento.getNomeCurso() == null || candidatoComplemento.getNomeCurso().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Curso de Formação: ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("Curso de FormaÃ§Ã£o: ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 			if (candidatoComplemento.getCodEducacional() == null || candidatoComplemento.getCodEducacional().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Nível Escolaridade ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("NÃ­vel Escolaridade ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 		}
@@ -1569,12 +1569,12 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			candidatoComplemento.setCandidato(new Candidato(candidato.getId()));
 			if (candidatoComplemento.getExperienciaProfissionalAnterior() == null
 					|| candidatoComplemento.getExperienciaProfissionalAnterior().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Experiência Anterior ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("ExperiÃªncia Anterior ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 			if (candidatoComplemento.getExperienciaProfissionalAtual() == null
 					|| candidatoComplemento.getExperienciaProfissionalAtual().trim().isEmpty()) {
-				FacesMessagesUtil.addErrorMessage("Experiência Atual ", Constantes.CAMPO_OBRIGATORIO);
+				FacesMessagesUtil.addErrorMessage("ExperiÃªncia Atual ", Constantes.CAMPO_OBRIGATORIO);
 				return false;
 			}
 		}
@@ -1590,7 +1590,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				switch (letra.charValue()) {
 				case '@':
 				case '-':
-					FacesMessagesUtil.addErrorMessage("Caracteres inválidos!", "Não é permitido '@' nem '-' no mome completo.");
+					FacesMessagesUtil.addErrorMessage("Caracteres invÃ¡lidos!", "NÃ£o Ã© permitido '@' nem '-' no mome completo.");
 					return true;
 				default:
 					break;
@@ -1604,16 +1604,16 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			candidato.setEmailInstitucional(getModel().getCandidato().getEmailInstitucional().trim());
 			List<Candidato> lista = universalManager.listBy(candidato, false);
 			if (lista != null && !lista.isEmpty() && !lista.get(0).getId().equals(getModel().getCandidato().getId())) {
-				FacesMessagesUtil.addErrorMessage("Email Institucional ", " Já cadastrado");
+				FacesMessagesUtil.addErrorMessage("Email Institucional ", " JÃ¡ cadastrado");
 
 			}
 			if (!getModel().getCandidato().getEmailInstitucional().trim().equals(confirmacaoEmail)) {
-				FacesMessagesUtil.addErrorMessage("Confirmação do Email Institucional ", "Inválida");
+				FacesMessagesUtil.addErrorMessage("ConfirmaÃ§Ã£o do Email Institucional ", "InvÃ¡lida");
 				return true;
 			}
 		}
 		if (orgaoSelecionado == null || orgaoSelecionado.getId() == null) {
-			FacesMessagesUtil.addErrorMessage("Orgão ", Constantes.CAMPO_OBRIGATORIO);
+			FacesMessagesUtil.addErrorMessage("OrgÃ£o ", Constantes.CAMPO_OBRIGATORIO);
 			return true;
 		}
 
@@ -1626,7 +1626,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 			String cpf = getModel().getCandidato().getCpf().trim().replaceAll("[()-.]", "");
 			// Validar CPF
 			if (!CpfUtil.isValidCPF(cpf)) {
-				FacesMessagesUtil.addErrorMessage("CPF ", "Inválido");
+				FacesMessagesUtil.addErrorMessage("CPF ", "InvÃ¡lido");
 				return true;
 			}
 
@@ -1790,11 +1790,11 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	}
 
 	/**
-	 * Método responsável por verificar se há alguma colisão entre turnos do Anexo A e B e horários referente ao Anexo C.
+	 * MÃ©todo responsÃ¡vel por verificar se hÃ¡ alguma colisÃ£o entre turnos do Anexo A e B e horÃ¡rios referente ao Anexo C.
 	 * 
 	 * @author Wesley Marra
 	 * @param curso
-	 * @return 'True' se houver uma colisão e 'false' caso não haja.
+	 * @return 'True' se houver uma colisÃ£o e 'false' caso nÃ£o haja.
 	 */
 	private boolean verificarColisaoCurso(Curso curso) {
 		getModel().setCandidato((Candidato) universalManager.get(Candidato.class, getModel().getCandidato().getId()));
@@ -1803,19 +1803,19 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 				Status ultimoStatus = inscricaoCursoService.ultimoStatusInscricao(inscricaoCurso).getStatus();
 
-				// Caso tenha algum turno null ou a inscrição tenha sido cancelada, não há necessidade de verificação
+				// Caso tenha algum turno null ou a inscriÃ§Ã£o tenha sido cancelada, nÃ£o hÃ¡ necessidade de verificaÃ§Ã£o
 				if (ultimoStatus.getId().equals(Status.CANCELADO) || curso.getTurno() == null || curso.getTurno().getId() == null
 						|| inscricaoCurso.getCurso().getTurno() == null || inscricaoCurso.getCurso().getTurno().getId() == null) {
 					continue;
 				}
 
-				// Verificando se o Usuário esta tentando se inscrever em um curso que já tenha sido feito uma inscrição anteriormente.
+				// Verificando se o UsuÃ¡rio esta tentando se inscrever em um curso que jÃ¡ tenha sido feito uma inscriÃ§Ã£o anteriormente.
 				if (curso.getId().equals(inscricaoCurso.getCurso().getId())) {
-					FacesMessagesUtil.addErrorMessage("Inscrição ", " Já foi realizado uma inscrição para o curso selecionado!");
+					FacesMessagesUtil.addErrorMessage("InscriÃ§Ã£o ", " JÃ¡ foi realizado uma inscriÃ§Ã£o para o curso selecionado!");
 					return Boolean.TRUE;
 				}
 
-				// Verificando colisões
+				// Verificando colisÃµes
 				if ((curso.getDtRealizacaoInicio().getTime() >= inscricaoCurso.getCurso().getDtRealizacaoInicio().getTime()
 						&& curso.getDtRealizacaoInicio().getTime() <= inscricaoCurso.getCurso().getDtRealizacaoFim().getTime())
 						|| (curso.getDtRealizacaoFim().getTime() >= inscricaoCurso.getCurso().getDtRealizacaoInicio().getTime()
@@ -1826,8 +1826,8 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 							if (inscricaoCurso.getCurso().getTurno().getId().equals(curso.getTurno().getId())
 									|| inscricaoCurso.getCurso().getTurno().getId().equals(Turno.AMBOS)
 									|| curso.getTurno().getId().equals(Turno.AMBOS)) {
-								FacesMessagesUtil.addErrorMessage("Colisão de Turnos",
-										"Exite inscrição em outro curso que colidem com o dia e turno do curso selecionado!");
+								FacesMessagesUtil.addErrorMessage("ColisÃ£o de Turnos",
+										"Exite inscriÃ§Ã£o em outro curso que colidem com o dia e turno do curso selecionado!");
 								return Boolean.TRUE;
 							}
 						}
@@ -1874,7 +1874,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 				comprovantes = inscricaoCursoService.carregarComprovantes(inscricaoCursoSelecionado);
 				documentos = inscricaoCursoService.carregarDocumentacao(inscricaoCursoSelecionado);
 
-				// Verifica se é para exibir informação de pagamento
+				// Verifica se Ã© para exibir informaÃ§Ã£o de pagamento
 				mostrarInformacaoPagamento = false;
 				for (HomologacaoCurso hc : inscricaoCursoSelecionado.getCurso().getHomologacaoCursos()) {
 					if (hc.getHomologacao().getId().equals(Homologacao.CONFIRMACAO_NOTA_EMPENHO)
@@ -1917,7 +1917,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 	}
 
 	/**
-	 * Prazo limite para cancelamento pelo candidato é de 17 dias antes da data início do curso TODO : Rever isso com a esaf depois.
+	 * Prazo limite para cancelamento pelo candidato Ã© de 17 dias antes da data inÃ­cio do curso TODO : Rever isso com a esaf depois.
 	 * 
 	 * @throws ParseException
 	 */
@@ -1956,7 +1956,7 @@ public class InscricaoCursoBean extends PaginableBean<InscricaoCurso> {
 
 	@Override
 	public String getQualifiedName() {
-		return "Inscrição";
+		return "InscriÃ§Ã£o";
 	}
 
 	@Override
