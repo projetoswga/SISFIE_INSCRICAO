@@ -12,11 +12,20 @@ import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
+import com.lowagie.text.pdf.PdfWriter;
+
+import fr.opensagres.odfdom.converter.pdf.PdfOptions;
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.MimeMapping;
+import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.images.FileImageProvider;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -132,12 +141,10 @@ public class DocxDocumentMergerAndConverter {
         //baixar demais converters: https://code.google.com/archive/p/xdocreport/downloads
         /**
          * @TODO tentar fazer assim depois
-         */
-        /*
         Options options = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF);
         IConverter converter = ConverterRegistry.getRegistry().findConverter(options);
         converter.convert(new ByteArrayInputStream(docxBytes), pdfByteOutputStream, options);
-        */
+         */
         wordprocessingMLPackage = WordprocessingMLPackage.load(new ByteArrayInputStream(docxBytes));
         PdfSettings pdfSettings = new PdfSettings();
         PdfConversion docx4jViaXSLFOconverter = new org.docx4j.convert.out.pdf.viaXSLFO.Conversion(wordprocessingMLPackage);
@@ -168,8 +175,12 @@ public class DocxDocumentMergerAndConverter {
 		if (null != imageVariablesWithPathMap && !imageVariablesWithPathMap.values().isEmpty()) {
 			replaceImagesVariabalesInTemplate(xdocReport, imageVariablesWithPathMap, context);
 		}
-		byte[] mergedOutput = generateMergedOutput(xdocReport, context);
-		byte[] pdfBytes = generatePDFOutputFromDocx(mergedOutput);
-		return pdfBytes;
+		Options options = Options.getTo(ConverterTypeTo.PDF)
+									.from(DocumentKind.fromMimeType(xdocReport.getMimeMapping().getMimeType()));
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		xdocReport.convert(context, options, bos);
+        return bos.toByteArray();
 	}
+	
+
 }

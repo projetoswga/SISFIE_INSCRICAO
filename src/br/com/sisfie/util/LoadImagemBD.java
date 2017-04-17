@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -133,7 +134,7 @@ public class LoadImagemBD extends HttpServlet {
 				imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
 			}
 
-			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
 			//response.getOutputStream().write(mergedOutput);
@@ -182,7 +183,7 @@ public class LoadImagemBD extends HttpServlet {
 				imageVariablesWithPathMap.put("header_image_logo", pathHeaderLogo.toString());
 			}
 
-			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGenerateOutput(
+			byte[] mergedOutput = new DocxDocumentMergerAndConverter().mergeAndGeneratePDFOutput(
 					templatePath, TemplateEngineKind.Freemarker, nonImageVariableMap, null);
 
 			//response.getOutputStream().write(mergedOutput);
@@ -288,14 +289,17 @@ public class LoadImagemBD extends HttpServlet {
 				response.setBufferSize(DEFAULT_BUFFER_SIZE);
 		        String mimeType = null;
 		        long fileSize = 0;
+		        String fileName;
 				if (null == content) {
 					input = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
 					mimeType = request.getServletContext().getMimeType(imageFileName);
 					fileSize = file.length();
+					fileName = file.getName();
 				} else {
-					input = new ByteArrayInputStream(content);
-					mimeType = URLConnection.guessContentTypeFromStream(input);
+					input = new ByteArrayInputStream(content);					
+					mimeType = "application/pdf";
 					fileSize = content.length;
+					fileName = file.getName().substring(0, file.getName().length()-3) + ".pdf";
 				}
 		        if (mimeType == null) {
 		            mimeType = contentType==null?"application/octet-stream":contentType;
@@ -306,7 +310,7 @@ public class LoadImagemBD extends HttpServlet {
 				response.setContentLength((int)fileSize);
 		        //response.setContentLength(-1);
 				response.addHeader("Content-Transfer-Encoding", "binary");
-				response.addHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
+				response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
 				output = new BufferedOutputStream(response.getOutputStream(), DEFAULT_BUFFER_SIZE);
 
