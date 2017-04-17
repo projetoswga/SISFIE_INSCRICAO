@@ -299,7 +299,7 @@ public class LoadImagemBD extends HttpServlet {
 					input = new ByteArrayInputStream(content);					
 					mimeType = "application/pdf";
 					fileSize = content.length;
-					fileName = file.getName().substring(0, file.getName().length()-3) + ".pdf";
+					fileName = file.getName().substring(0, file.getName().length()-4) + ".pdf";
 				}
 		        if (mimeType == null) {
 		            mimeType = contentType==null?"application/octet-stream":contentType;
