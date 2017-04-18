@@ -320,7 +320,6 @@ public class LoadImagemBD extends HttpServlet {
 				while ((length = input.read(buffer)) > 0) {
 					output.write(buffer, 0, length);
 				}
-
 				// Finalizando
 				output.flush();
 				response.flushBuffer();

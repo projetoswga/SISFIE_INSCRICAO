@@ -1,5 +1,6 @@
 package br.com.sisfie.util;
  
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -12,20 +13,20 @@ import org.docx4j.convert.out.pdf.viaXSLFO.PdfSettings;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 
-import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.Font;
+import com.lowagie.text.FontFactoryImp;
 
 import fr.opensagres.odfdom.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
-import fr.opensagres.xdocreport.converter.MimeMapping;
+import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
-import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.internal.ByteArrayOutputStream;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.images.FileImageProvider;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
-import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
+import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -177,8 +178,56 @@ public class DocxDocumentMergerAndConverter {
 		}
 		Options options = Options.getTo(ConverterTypeTo.PDF)
 									.from(DocumentKind.fromMimeType(xdocReport.getMimeMapping().getMimeType()));
+		PdfOptions pdfOptions = PdfOptions.create();
+		pdfOptions.fontProvider(new IFontProvider() {
+			
+			@Override
+			public Font getFont(String familyName, String encoding, float size, int style, Color color) {
+				Font font = new FontFactoryImp().getFont(familyName,encoding,size,style,color);
+				if (null == font || font.getFamily() == Font.UNDEFINED) {
+					font = new Font(Font.HELVETICA, size, style, color);
+				}
+				
+				System.out.println("---------------FONT: " + font.getFamilyname());
+				return font;
+			}
+
+			public Font getFont(String familyName, String encoding, com.google.code.appengine.awt.Color color) {
+				Font font = new FontFactoryImp().getFont(familyName);
+				if (null == font || font.getFamily() == Font.UNDEFINED) {
+					font = new Font(Font.HELVETICA);
+				}
+				
+				System.out.println("---------------FONT: " + font.getFamilyname());
+				return font;
+			}
+			
+			public Font getFont(String familyName, String encoding, Color color) {
+				Font font = new FontFactoryImp().getFont(familyName);
+				if (null == font || font.getFamily() == Font.UNDEFINED) {
+					font = new Font(Font.HELVETICA);
+				}
+				
+				System.out.println("---------------FONT: " + font.getFamilyname());
+				return font;
+			}
+			
+		});
+		options.subOptions(pdfOptions);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		xdocReport.convert(context, options, bos);
+		
+		try {
+			IConverter converter = xdocReport.getConverter(options);
+			System.out.println("---------------Converter Class: " + converter.getClass().getName() + " from " + options.getFrom());
+			//xdocReport.convert(context, options, bos);
+			System.out.println("--------------Iniciando conversão");
+			converter.convert(new ByteArrayInputStream(generateMergedOutput(xdocReport, context)), bos, options);
+		} catch (Exception e) {
+			System.out.println("--------------ERROR");
+			e.printStackTrace();
+			return null;
+		}
+		
         return bos.toByteArray();
 	}
 	

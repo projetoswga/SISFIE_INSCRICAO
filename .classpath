@@ -517,7 +517,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.docx.xwpf-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.docx.xwpf-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.xdocreport.converter.docx.xwpf/2.0.0/fr.opensagres.xdocreport.converter.docx.xwpf-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -537,7 +537,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.itext.extension-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.itext.extension-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.xdocreport.itext.extension/2.0.0/fr.opensagres.xdocreport.itext.extension-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -548,11 +548,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.template.freemarker-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.itext5.extension-2.0.0.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -617,22 +612,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.core-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.core-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.odfdom.converter.core/2.0.0/fr.opensagres.odfdom.converter.core-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.pdf-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.pdf-gae-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.pdf.itext5-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.odfdom.converter.pdf-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.odfdom.converter.pdf/2.0.0/fr.opensagres.odfdom.converter.pdf-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -642,27 +627,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.core-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.core-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.poi.xwpf.converter.core/2.0.0/fr.opensagres.poi.xwpf.converter.core-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.core-gae-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.pdf-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.pdf-gae-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.pdf.itext5-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.pdf-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.poi.xwpf.converter.pdf/2.0.0/fr.opensagres.poi.xwpf.converter.pdf-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -672,22 +642,17 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.poi.xwpf.converter.xhtml-gae-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/fr.opensagres.web.servlet.view.xdocreport-2.0.0.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.docx.docx4j-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.docx.docx4j-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.xdocreport.converter.docx.docx4j/2.0.0/fr.opensagres.xdocreport.converter.docx.docx4j-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.odt.odfdom-2.0.0.jar">
+	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.converter.odt.odfdom-2.0.0.jar" sourcepath="C:/Users/andre/.m2/repository/fr/opensagres/xdocreport/fr.opensagres.xdocreport.converter.odt.odfdom/2.0.0/fr.opensagres.xdocreport.converter.odt.odfdom-2.0.0-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -717,11 +682,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.itext.extension-gae-2.0.0.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/fr.opensagres.xdocreport.template.velocity-2.0.0.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
@@ -737,12 +697,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/itext-2.1.7.jar">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/itext-gae-4.2.0-1.jar">
+	<classpathentry kind="lib" path="lib/itext-2.1.7.jar" sourcepath="C:/Users/andre/.m2/repository/com/lowagie/itext/2.1.7/itext-2.1.7-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
@@ -787,7 +742,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/odfdom-java-0.8.7.jar">
+	<classpathentry kind="lib" path="lib/odfdom-java-0.8.7.jar" sourcepath="C:/Users/andre/.m2/repository/org/odftoolkit/odfdom-java/0.8.7/odfdom-java-0.8.7-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
